@@ -1,0 +1,673 @@
+// LESS variables + mixins
+
+// Colors
+
+@white: #fff;
+@bg: #fbfbfb;
+@border: #f6f6f5;
+@dborder: #d4d4d4;
+@main: #2c2b33;
+@custom: #68686d;
+@blue: #388cb8;
+@orange: #ff9933;
+
+
+
+// CSS3 shortcuts
+
+.border-radius(@radius: 5px) {
+-webkit-border-radius: @radius;
+   -moz-border-radius: @radius;
+     -o-border-radius: @radius;
+        border-radius: @radius;
+}
+
+.box-shadow(@shadow1, @shadow2: transparent 0 0 0 ) {
+    -moz-box-shadow: @shadow1, @shadow2;
+    -webkit-box-shadow: @shadow1, @shadow2;
+    box-shadow: @shadow1, @shadow2;
+}
+
+.transition(@transition) {
+    -webkit-transition: @transition;
+       -moz-transition: @transition;
+         -o-transition: @transition;
+            transition: @transition;
+}
+
+// Reset inside the Code Editor container
+
+.csdl-container {
+    margin: 0;
+    text-rendering: optimizeLegibility;
+    font-size: 100%;
+    -webkit-overflow-scrolling: touch;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+
+    a,u,ins{text-decoration:none}
+    a:hover{text-decoration:none}
+    del,s{text-decoration:line-through}
+    pre,code,samp,kbd{font-family:monospace}
+    small{font-size:.75em}
+    img{border:0;font-style:italic}
+    input,select,option,optgroup,textarea{font:inherit}
+
+    article, aside, details, figcaption, figure, footer, header, hgroup, nav, section { display: block; }
+    audio[controls], canvas, video { display: inline-block; *display: inline; *zoom: 1; }
+
+    img { border: 0; -ms-interpolation-mode: bicubic; display: block;}
+    img, object, embed { max-width: 100%; height: auto; }
+
+    * { -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }
+
+}
+
+// Minimal fluid grid system
+
+.csdl-container {
+
+    .csdl-row { width: 100%; margin: 0 auto; padding: 0 ;}
+    .csdl-row .csdl-row { width: auto; max-width: none; min-width: 0; padding: 0; }
+
+    .csdl-column { float: left; min-height: 1px; padding: 0 10px; position: relative; }
+    [class*="csdl-column"] + [class*="csdl-column"]:last-child { float: right; }
+    [class*="drb-column"] + [class*="csdl-column"].end { float: left; }
+
+    .csdl-row .csdl-column.one      { width: 8.33%; }
+    .csdl-row .csdl-column.two      { width: 16.66%; }
+    .csdl-row .csdl-column.three    { width: 25%; }
+    .csdl-row .csdl-column.four     { width: 33.33%; }
+    .csdl-row .csdl-column.five     { width: 41.66%; }
+    .csdl-row .csdl-column.six      { width: 50%; }
+    .csdl-row .csdl-column.seven    { width: 58.33%; }
+    .csdl-row .csdl-column.eight    { width: 66.66%; }
+    .csdl-row .csdl-column.nine     { width: 75%; }
+    .csdl-row .csdl-column.ten      { width: 83.33%; }
+    .csdl-row .csdl-column.eleven   { width: 91.66%; }
+    .csdl-row .csdl-column.twelve   { width: 100%; }
+
+    .csdl-row:before, .csdl-row:after, .clearfix:before, .clearfix:after { content:""; display:table; }
+    .csdl-row:after, .clearfix:after { clear: both; }
+    .csdl-row, .clearfix { zoom: 1; }
+
+}
+
+
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - BASICS */
+
+.csdl-container {
+    position: relative;
+    overflow: hidden;
+    display: block;
+
+    background: @bg;
+    color: @main;
+    border: 1px solid @dborder;
+    .border-radius(3px);
+
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    line-height: 19px;
+
+    a {
+        text-decoration: none;
+        color: @custom;
+        .transition(all 0.14s ease-out);
+
+        &:hover {
+            color: @blue;
+        }
+
+    }
+
+    h1, h2, h3 {
+        font-weight: normal;
+    }
+
+    h1 {
+        font-size: 48px;
+        line-height: 48px;
+    }
+
+    h2 {
+        font-size: 20px;
+        line-height: 20px;
+        color: @blue;
+    }
+
+    h3 {
+        font-size: 15px;
+        line-height: 20px;
+        color: #bbb;
+    }
+
+    p {
+        margin-top: 14px;
+    }
+
+    .csdl-inactive {
+        opacity: 0.5;
+    }
+
+    &.csdl-fullscreen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background: white;
+    }
+
+    .csdl-maps-marker-url {
+        background: url('images/maps-marker.png');
+    }
+
+}
+
+
+
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - HEADER */
+
+.csdl-container .csdl-header, .csdl-container .csdl-footer {
+    clear: both;
+    height: 46px;
+    background: @border;
+    border: 0;
+}
+
+.csdl-container .csdl-header {
+    border-bottom: 1px solid @dborder;
+    .border-radius(3px 3px 0 0);
+    padding: 10px;
+
+    a {
+        float: left;
+        .border-radius(3px);
+        text-transform: uppercase;
+        font-weight: bold;
+
+        margin-right: 6px;
+        padding: 3px 8px 2px 24px;
+        border: 1px solid @dborder;
+        background: @white url('images/csdl-header.png') 2px -1px no-repeat;
+        background-size: 20px 156px;
+
+        font-size: 10px;
+        color: @blue;
+
+        &:hover {
+            color: @orange;
+            border-color: #bbb;
+        }
+
+        &.csdl-inactive {
+            color: @custom;
+            background-color: none;
+
+            &:hover {
+                border-color: @dborder;
+            }
+
+        }
+
+        &.csdl-redo {
+            background-position: 2px -27px;
+            margin-right: 20px;
+        }
+
+        &.csdl-geoselect {
+            background-position: 2px -53px;
+            margin-right: 20px;
+        }
+
+        &.csdl-theme {
+            background-position: 2px -79px;
+        }
+
+        &.csdl-view-open {
+            background-position: 2px -105px;
+            padding: 0;
+            width: 26px;
+            height: 26px;
+        }
+
+        &.csdl-view-close {
+            background-position: 2px -131px;
+            padding: 0;
+            width: 26px;
+            height: 26px;
+        }
+
+        &.csdl-save {
+            float: right;
+            padding: 5px 16px;
+            margin: -3px -4px 0 0;
+            border-color: rgba(0,0,0,0.14);
+            background: @blue;
+            
+            font-size: 11px;
+            letter-spacing: 1px;
+            color: @white;
+
+            &:hover {
+                background: @orange;
+            }
+        }
+    }
+}
+
+.csdl-container .csdl-footer {
+    border-top: 1px solid @dborder;
+    .border-radius(0 0 3px 3px);
+    padding: 12px 14px;
+    color: @custom;
+
+    .csdl-help {
+        float: left;
+        width: 90%;
+        background: url('images/csdl-help.png') 0 1px no-repeat;
+        background-size: 18px 18px;
+        font-size: 12px;
+        padding-left: 26px;
+
+        a {
+            font-weight: bold;
+            margin-left: 6px;
+            color: @blue;
+
+            &:hover {
+                color: @orange;
+            }
+        }
+    }
+
+    .indicator {
+        display: inline-block;
+        float: left;
+        margin-right: 8px;
+        width: 16px;
+        height: 16px;
+        padding: 0;
+        background: url('images/loader.gif') 0 2px no-repeat;
+    }
+
+}
+
+
+
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - HELP POPUP */
+
+body > .csdl-overlay {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: @white;
+    opacity: 0.6;
+    z-index: 100;
+}
+
+body > .csdl-popup {
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    margin: 0;
+    margin-left: -225px;
+    display: block;
+    width: 450px;
+    padding: 0;
+    background: @white;
+    border: 4px solid #ddd;
+    min-width: auto;
+    z-index: 101;
+
+    .csdl-close {
+        position: absolute;
+        top: 2px;
+        right: 10px;
+        color: #777;
+    }
+
+    .csdl-popup-content {
+        padding: 20px 15px;
+        border: 1px solid #ddd;
+    }
+}
+
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - HINT HELP */
+
+.csdl-hint-help {
+    position: absolute;
+    z-index: 10;
+    overflow: hidden;
+    margin: 0;
+    padding: 2px 5px;
+
+    .box-shadow(2px 3px 5px rgba(0, 0, 0, .2));
+    .border-radius(3px);
+    border: 1px solid silver;
+
+    background: white;
+    font-size: 90%;
+
+    max-height: 200px;
+    max-width: 400px;
+    overflow-y: auto;
+}
+
+
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - CODEMIRROR EDITOR */
+
+.csdl-container .csdl-editor-container {
+    overflow: hidden;
+}
+
+.csdl-container .CodeMirror {
+    height: 600px;
+
+    &, * {
+        -moz-box-sizing: content-box; -webkit-box-sizing: content-box; box-sizing: content-box;
+    }
+
+    .CodeMirror-linenumbers {
+        width: 30px;
+    }
+
+    .CodeMirror-linenumber {
+        padding-right: 2px;
+    }
+}
+
+.CodeMirror-hints {
+
+    .CodeMirror-hint-active {
+        background: @orange;
+    }
+}
+
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - GEO SELECTION */
+
+.csdl-container .csdl-geo {
+    position: absolute;
+    z-index: 50;
+    top: 46px;
+    bottom: 46px;
+    width: 100%;
+    background: @border;
+    text-align: center;
+
+    .csdl-map {
+        position: relative;
+
+        .csdl-map-search {
+            display: block;
+            margin: 10px auto;
+            width: 100%;
+            padding: 4px 8px;
+            height: auto;
+            font-size: 12px;
+            border: 1px solid #ccc;
+            .border-radius(3px);
+
+            &:focus {
+                outline: none;
+                .box-shadow(0 0 0 rgba(0,0,0,0));
+            }
+
+        }
+
+        .csdl-map-canvas {
+            display: block;
+            margin: 10px auto;
+            min-width: 250px;
+            max-width: 750px;
+            width: 100%;
+            height: 250px;
+        }
+
+        .csdl-map-instructions {
+            display: block;
+            margin: 10px auto;
+            width: 70%;
+            text-align: center;
+            line-height: 1.3em;
+        }
+
+        .csdl-clear-map {
+            display: block;
+            width: 125px;
+            position: absolute;
+            top: 45px;
+            left: 50%;
+            margin-left: -60px;
+            z-index: 100;
+            background: #fff;
+            border: 1px solid #717b87;
+            font-size: 13px;
+            color: #000;
+            font-weight: bold;
+            padding: 1px 6px;
+            .box-shadow(0 2px 4px 0 rgba(0, 0, 0, 0.4));
+            display: none;
+
+            &:hover {
+                color: #000;
+            }
+        }
+
+        .csdl-map-coordinates,
+        .csdl-map-area {
+            margin: 0 10px 10px;
+            text-align: center;
+            font-size: 11px;
+            color: @custom;
+
+            label {
+                display: inline;
+                font-size: 11px;
+            }
+
+            span {
+                margin-left: 10px;
+            }
+        }
+
+        .csdl-map-coordinates {
+            ul {
+                margin: 0;
+                padding: 0;
+
+                li {
+                    display: inline;
+                    margin: 5px;
+                }
+            }
+        }
+    }
+
+    .csdl-button {
+        display: inline-block;
+        .border-radius(3px);
+        text-transform: uppercase;
+        font-weight: bold;
+
+        margin: 0 6px;
+        padding: 3px 8px 2px;
+        border: 1px solid @dborder;
+        background: @white;
+
+        font-size: 10px;
+        color: @blue;
+
+        &:hover {
+            color: @orange;
+            border-color: #bbb;
+        }
+
+        &.done {
+            border-color: rgba(0,0,0,0.14);
+            background: @blue;
+            color: @white;
+
+            &:hover {
+                background: @orange;
+            }
+        }
+    }
+}
+
+
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - LIGHT THEME */
+.csdl-container.csdl-theme-light {
+
+    .CodeMirror {
+        /* highlight text that matches selection */
+        .cm-matchhighlight {
+            border: 1px solid #ddd;
+        }
+
+        /* selected text */
+
+        /* empty editor */
+        .CodeMirror-empty {
+        }
+
+        .CodeMirror-selectedtext {
+            background: #e5e5e5;
+            border: 0;
+        }
+
+        .CodeMirror-activeline-background {
+            background: #f5f5f5;
+        }
+
+        .cm-comment {
+            color: #aaa;
+            font-style: italic;
+        }
+
+        .cm-keyword {
+            color: red;
+        }
+
+        .cm-logical {
+            color: red;
+        }
+
+        .cm-target {
+            color: blue;
+        }
+
+        .cm-string {
+            color: green;
+        }
+
+        .cm-operator {
+            color: red;
+        }
+
+        .cm-bracket {
+            font-weight: bold;
+        }
+
+        .CodeMirror-gutters {
+            border: 0;
+        }
+
+        .CodeMirror-linenumber {
+            color: #A7A7A7;
+        }
+
+        .CodeMirror-matchingbracket {
+        }
+
+        .CodeMirror-nonmatchingbracket {
+            text-decoration: underline;
+        }
+
+    }
+}
+
+
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - DARK THEME */
+.csdl-container.csdl-theme-dark {
+
+    .CodeMirror {
+        background: #141414;
+        color: #F8F8F8;
+
+        .CodeMirror-cursor {
+            border-color: #A7A7A7;
+        }
+
+        .CodeMirror-selectedtext {
+            background: #3c4043;
+        }
+
+        .CodeMirror-activeline {
+            color: #f8f8f4;
+        }
+
+        .CodeMirror-activeline-background {
+            background: #181818;
+        }
+
+        .cm-comment {
+            color: #5F5A60;
+            font-style: italic;
+        }
+
+        .cm-keyword {
+            color: #CDA869;
+        }
+
+        .cm-logical {
+            color: #CDA869;
+        }
+
+        .cm-target {
+            color: #6f87a6;
+            //color: #9B703F;
+        }
+
+        .cm-string {
+            color: #8F9D6A;
+        }
+
+        .cm-operator {
+            color: #F8F8F8;
+        }
+
+        .cm-bracket {
+            color: #f8f8f4;
+        }
+
+        .CodeMirror-gutters {
+            background: #141414;
+            border: 0;
+        }
+
+        .CodeMirror-linenumber {
+            color: #A7A7A7;
+        }
+
+        .CodeMirror-matchingbracket {
+            color: #F8F8F8;
+            font-weight: bold;
+        }
+
+        .CodeMirror-nonmatchingbracket {
+            color: #F8F8F8;
+            text-decoration: underline;
+        }
+    }
+
+}
+
+
+
