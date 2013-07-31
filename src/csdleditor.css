@@ -858,6 +858,9 @@ body > .csdl-popup .csdl-popup-content {
 .csdl-container.csdl-theme-light .CodeMirror .cm-operator {
   color: red;
 }
+.csdl-container.csdl-theme-light .CodeMirror .cm-punctuation {
+  color: #666;
+}
 .csdl-container.csdl-theme-light .CodeMirror .cm-bracket {
   font-weight: bold;
 }
@@ -905,6 +908,9 @@ body > .csdl-popup .csdl-popup-content {
 }
 .csdl-container.csdl-theme-dark .CodeMirror .cm-operator {
   color: #F8F8F8;
+}
+.csdl-container.csdl-theme-dark .CodeMirror .cm-punctuation {
+  color: #bbb;
 }
 .csdl-container.csdl-theme-dark .CodeMirror .cm-bracket {
   color: #f8f8f4;

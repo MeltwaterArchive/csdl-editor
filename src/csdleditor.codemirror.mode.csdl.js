@@ -35,6 +35,13 @@
     keywords = {},
 
     /**
+     * Dictionary of all available CSDL punctuation controls.
+     * 
+     * @type {Object}
+     */
+    punctuationControl = {},
+
+    /**
      * Default tokenizer that will try to recognize tokens.
      * 
      * @param  {StringStream} stream Current stream object.
@@ -42,8 +49,7 @@
      * @return {String|null}
      */
     tokenize = function(stream, state) {
-        var ch = stream.next(),
-            next = stream.peek();
+        var ch = stream.next();
 
         state.type = null;
 
@@ -123,6 +129,17 @@
         // is it a keyword?
         if (keywords.hasOwnProperty(word)) {
             return 'keyword';
+        }
+
+        // is it a start of punctuation control tag?
+        if (word === '[keep') {
+            stream.eatWhile(/^[^\s]/);
+            word = stream.current().toLowerCase();
+        }
+
+        // is it a punctuation control?
+        if (punctuationControl.hasOwnProperty(word)) {
+            return 'punctuation';
         }
 
         // didn't match any token so return null
@@ -219,6 +236,7 @@
         operators = arrayToDictionary(parserConfig.operators);
         logicals = arrayToDictionary(parserConfig.logical);
         keywords = arrayToDictionary(parserConfig.keywords);
+        punctuationControl = arrayToDictionary(parserConfig.punctuationControl);
 
         function pushContext(stream, state, type) {
             state.context = {

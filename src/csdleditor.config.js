@@ -66,6 +66,12 @@ var CSDLEditorConfig = CSDLEditorConfig || {
         'return'
     ],
 
+    punctuationControl : [
+        '[keep(default)]',
+        '[keep(classic)]',
+        '[keep(extended)]'
+    ],
+
     targets : [
        "interaction.link",
        "interaction.sample",

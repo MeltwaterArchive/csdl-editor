@@ -233,7 +233,8 @@ CSDLEditor.Loader.addComponent(function($) {
                         targets : this.config.targets,
                         operators : this.config.operators,
                         logical : this.config.logical,
-                        keywords : this.config.keywords
+                        keywords : this.config.keywords,
+                        punctuationControl : this.config.punctuationControl
                     },
                     extraKeys : {
                         'Esc' : function() {

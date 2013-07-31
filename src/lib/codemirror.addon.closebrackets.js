@@ -1,5 +1,5 @@
 (function() {
-  var DEFAULT_BRACKETS = "()[]{}''\"\"";
+  var DEFAULT_BRACKETS = "(){}''\"\"";
   var SPACE_CHAR_REGEX = /\s/;
 
   CodeMirror.defineOption("autoCloseBrackets", false, function(cm, val, old) {

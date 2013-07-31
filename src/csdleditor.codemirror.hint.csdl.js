@@ -35,6 +35,13 @@
     keywords = CSDLEditorConfig.keywords,
 
     /**
+     * List of all available punctuation controls.
+     * 
+     * @type {Array}
+     */
+    punctuationControl = CSDLEditorConfig.punctuationControl,
+
+    /**
      * String value of the current token that is being hinted.
      *
      * Required for a check to prevent firing the hinting function
@@ -103,6 +110,17 @@
             candidates = candidates.concat(keywords);
         }
 
+        // punctuation control can only occur after "contains", "contains_any" and "contains_near" operators
+        if (previous !== undefined && previous.type === 'operator' && (
+            previous.string.toLowerCase() === 'contains'
+            || previous.string.toLowerCase() === 'contains_any'
+            || previous.string.toLowerCase() === 'continas_near'
+        )) {
+            candidates = candidates.concat(punctuationControl);
+        }
+
+        console.log(candidates);
+
         // and now filter the candidates
         for (i = 0; i < candidates.length; i++) {
             // if a substr of the candidate matches the string then autocomplete
@@ -134,7 +152,7 @@
         currentToken = token.string;
 
         // only match words and outside of comments
-        if (token.state.type !== 'comment' && token.state.type !== 'string' && /^[0-9a-zA-Z_<>=!\.]+$/.test(token.string)) {
+        if (token.state.type !== 'comment' && token.state.type !== 'string' && /^[0-9a-zA-Z_<>=!\.\(\)\[\]]+$/.test(token.string)) {
             var previousToken = CodeMirror.getPreviousToken(cm, cursor, token);
             list = getHintList(token, previousToken);
             list.sort();
