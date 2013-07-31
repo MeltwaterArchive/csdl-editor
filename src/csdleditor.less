@@ -11,6 +11,11 @@
 @blue: #388cb8;
 @orange: #ff9933;
 
+// assets
+@headerImg: 'images/csdl-header.png';
+@headerImgWidth: 20px;
+@headerImgHeight: 260px;
+
 
 
 // CSS3 shortcuts
@@ -56,9 +61,13 @@
     small{font-size:.75em}
     img{border:0;font-style:italic}
     input,select,option,optgroup,textarea{font:inherit}
+    label{font-size:inherit;line-height:1;margin:0;cursor:pointer;}
 
     article, aside, details, figcaption, figure, footer, header, hgroup, nav, section { display: block; }
     audio[controls], canvas, video { display: inline-block; *display: inline; *zoom: 1; }
+    input[type="checkbox"] {margin:0;}
+
+    h1,h2,h3,h4 {font-size: 1;font-weight:bold;color:@custom;text-align:left;margin:5px 0;}
 
     img { border: 0; -ms-interpolation-mode: bicubic; display: block;}
     img, object, embed { max-width: 100%; height: auto; }
@@ -109,6 +118,7 @@
     color: @main;
     border: 1px solid @dborder;
     .border-radius(3px);
+    min-width: 740px;
 
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 13px;
@@ -166,6 +176,76 @@
         background: url('images/maps-marker.png');
     }
 
+    .csdl-button {
+        display: inline-block;
+        .border-radius(3px);
+        text-transform: uppercase;
+        font-weight: bold;
+
+        margin: 0 6px;
+        padding: 3px 8px 2px;
+        border: 1px solid @dborder;
+        background-color: @white;
+
+        font-size: 10px;
+        color: @blue;
+
+        &:hover {
+            color: @orange;
+            border-color: #bbb;
+        }
+
+        &.done {
+            border-color: rgba(0,0,0,0.14);
+            background: @blue;
+            color: @white;
+
+            &:hover {
+                background: @orange;
+            }
+        }
+
+        &.csdl-button-icon {
+            padding-left: 24px;
+            background-image: url(@headerImg);
+            background-repeat: no-repeat;
+            background-size: @headerImgWidth @headerImgHeight;
+
+            &.csdl-sort-az {
+                background-position: 2px -184px;
+            }
+
+            &.csdl-copy {
+                background-position: 2px -210px;
+            }
+
+            &.csdl-import {
+                background-position: 2px -235px;
+            }
+        }
+    }
+
+    .csdl-icon {
+        display: inline-block;
+        width: 26px;
+        height: 26px;
+        background: url('images/csdl-icons.png') no-repeat;
+        vertical-align: middle;
+
+        &.csdl-delete {
+            background-position: 0 0;
+        }
+
+        &.csdl-reorder {
+            background-position: 0 -26px;
+        }
+    }
+
+    // zclip fix
+    .zclip {
+        overflow: hidden;
+    }
+
 }
 
 
@@ -193,8 +273,8 @@
         margin-right: 6px;
         padding: 3px 8px 2px 24px;
         border: 1px solid @dborder;
-        background: @white url('images/csdl-header.png') 2px -1px no-repeat;
-        background-size: 20px 156px;
+        background: @white url(@headerImg) 2px -1px no-repeat;
+        background-size: @headerImgWidth @headerImgHeight;
 
         font-size: 10px;
         color: @blue;
@@ -221,6 +301,10 @@
 
         &.csdl-geoselect {
             background-position: 2px -53px;
+        }
+
+        &.csdl-listeditor {
+            background-position: 2px -158px;
             margin-right: 20px;
         }
 
@@ -490,32 +574,228 @@ body > .csdl-popup {
         }
     }
 
-    .csdl-button {
-        display: inline-block;
-        .border-radius(3px);
-        text-transform: uppercase;
-        font-weight: bold;
+}
 
-        margin: 0 6px;
-        padding: 3px 8px 2px;
-        border: 1px solid @dborder;
+
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - LIST EDITOR */
+.csdl-container .csdl-list {
+    position: absolute;
+    z-index: 50;
+    top: 46px;
+    bottom: 46px;
+    width: 100%;
+    background: @border;
+    text-align: center;
+
+    .csdl-list-bar {
+        padding: 5px;
+        border-bottom: 1px solid @dborder;
+
+        .csdl-button.done {
+            margin-right: 0;
+        }
+    }
+
+    .csdl-button.add {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        z-index: 51;
+    }
+
+    input.csdl-search {
+        display: none;
+        position: relative;
+        top: -1px;
+        height: 26px;
+        width: 150px;
+        margin: 0 10px;
+        line-height: 18px;
+        padding: 4px 6px;
+        font-size: 13px;
+        color: @main;
         background: @white;
+        vertical-align: middle;
+        border: 1px solid @dborder;
+        .border-radius(3px);
+        .box-shadow(inset 0 1px 1px rgba(0, 0, 0, 0.075));
+        .transition(all 0.14s ease-out);
 
-        font-size: 10px;
-        color: @blue;
-
-        &:hover {
-            color: @orange;
-            border-color: #bbb;
+        &.on {
+            display: inline-block;
         }
 
-        &.done {
-            border-color: rgba(0,0,0,0.14);
-            background: @blue;
-            color: @white;
+        &:focus {
+            .box-shadow(inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6));
+        }
+    }
 
-            &:hover {
-                background: @orange;
+    .csdl-left {
+        text-align: left;
+        padding: 0;
+    }
+
+    .csdl-right {
+        text-align: right;
+        padding: 0;
+    }
+
+    .csdl-list-container {
+        position: absolute;
+        z-index: 50;
+        top: 37px;
+        bottom: 0;
+        width: 100%;
+        overflow: auto;
+
+        ol {
+            list-style: none;
+            width: 400px;
+            display: block;
+            margin: 0 auto;
+
+            li {
+                margin: 6px 0;
+                line-height: 26px;
+                text-align: left;
+
+                &:hover {
+                    .csdl-icon.csdl-delete {
+                        opacity: 1;
+                    }
+                }
+            }
+        }
+
+        .csdl-icon {
+            width: 22px;
+
+            &.csdl-delete {
+                opacity: 0;
+            }
+        }
+
+        input {
+            display: inline-block;
+            height: 26px;
+            width: 300px;
+            margin: 0;
+            margin-left: 5px;
+            line-height: 18px;
+            padding: 4px 6px;
+            font-size: 14px;
+            color: @main;
+            background: transparent;
+            vertical-align: middle;
+            border: 1px solid transparent;
+            .border-radius(0);
+            .box-shadow(inset 0 1px 1px rgba(0, 0, 0, 0));
+            .transition(all 0.14s ease-out);
+            cursor: pointer;
+
+            &:focus {
+                background: @white;
+                border: 1px solid @dborder;
+                .box-shadow(inset 0 1px 1px rgba(0, 0, 0, 0.075));
+            }
+        }
+    }
+
+    .csdl-import-view {
+        position: absolute;
+        z-index: 55;
+        top: 38px;
+        //bottom: 30%;
+        left: 50%;
+        width: 650px;
+        margin-left: -325px;
+        overflow: auto;
+        background: @bg;
+        padding: 10px;
+        border: 1px solid @dborder;
+        border-top: 0;
+        .box-shadow(0 3px 3px rgba(0, 0, 0, 0.05));
+
+        .csdl-draganddrop {
+            border: 2px dashed @dborder;
+            .border-radius(3px);
+            padding: 20px;
+            width: 100%;
+            margin-bottom: 20px;
+            text-align: center;
+            background: @white;
+            color: @custom;
+            .transition(all 0.14s ease-out);
+
+            p {
+                margin: 0;
+                margin-bottom: 14px;
+            }
+
+            &.over {
+                border-color: transparent;
+                .box-shadow(0 0 8px rgba(82, 168, 236, 0.6));
+            }
+        }
+
+        .csdl-button.done {
+            margin-right: 0;
+        }
+
+        .csdl-error {
+            color: red;
+            font-weight: bold;
+        }
+
+        textarea {
+            display: inline-block;
+            height: 100px;
+            width: 100%;
+            line-height: 18px;
+            padding: 4px 6px;
+            font-size: 14px;
+            color: @main;
+            background: @white;
+            border: 1px solid @dborder;
+            .border-radius(0);
+            .box-shadow(inset 0 1px 1px rgba(0, 0, 0, 0));
+            .transition(all 0.14s ease-out);
+
+            &:focus {
+                background: @white;
+                .box-shadow(inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6));
+            }
+        }
+
+        table {
+            width: 100%;
+            margin: 0;
+            margin-bottom: 10px;
+            border-collapse: collapse;
+            border-spacing: 0;
+            border: 1px solid @dborder;
+            background: @white;
+
+            td {
+                padding: 2px;
+            }
+
+            tr.ignored {
+                td {
+                    text-decoration: line-through;
+                    color: @dborder;
+                }
+            }
+
+            td, th {border: 1px solid @dborder;}
+            tr:first-child th {border-top: 0;}
+            tr:last-child td {border-bottom: 0;}
+            tr td:first-child, tr th:first-child {border-left: 0;}
+            tr td:last-child, tr th:last-child {border-right: 0;}
+
+            tfoot tr td {
+                text-align: center;
+                font-size: 0.8em;
             }
         }
     }

@@ -86,6 +86,7 @@ CSDLEditor.Loader.addComponent(function($) {
                 fillOpacity : 0.5
             },
             mapsMarker : null,
+            zeroClipboard : null,
 
             // hooks/event handles
             save : function(code) {
@@ -142,6 +143,15 @@ CSDLEditor.Loader.addComponent(function($) {
         /** @type {Number} Line number where the current geo selection value should go in. */
         currentGeoSelectionValueLine : null,
 
+        /** @type {jQuery} List editor currently visible. */
+        $list : null,
+        /** @type {Boolean} Is list editor visible? */
+        isListEditor : false,
+        /** @type {CodeMirror.Token} String token that should get the new list value. */
+        currentListValueToken : null,
+        /** @type {Number} Line number where the current list value should go in. */
+        currentListValueLine : null,
+
         /** @type {Boolean} Full screened flag. */
         isFullscreen : false,
         /** @type {Number} Scroll position before entering fullscreen. */
@@ -171,6 +181,7 @@ CSDLEditor.Loader.addComponent(function($) {
             this.$undoBtn = this.$container.find('[data-undo]');
             this.$redoBtn = this.$container.find('[data-redo]');
             this.$geoBtn = this.$container.find('[data-geo]');
+            this.$listBtn = this.$container.find('[data-list]');
             this.$darkBtn = this.$container.find('[data-theme-dark]');
             this.$lightBtn = this.$container.find('[data-theme-light]');
             this.$maxBtn = this.$container.find('[data-max]');
@@ -182,6 +193,10 @@ CSDLEditor.Loader.addComponent(function($) {
             // now apply the assets url to maps marker
             if (!this.options.mapsMarker) {
                 this.options.mapsMarker = this.assetsUrl + 'images/maps-marker.png';
+            }
+
+            if (!this.options.zeroClipboard) {
+                this.options.zeroClipboard = this.assetsUrl + 'swf/ZeroClipboard.swf';
             }
 
             // configure CSDL mode for "continue comments" addon
@@ -274,9 +289,8 @@ CSDLEditor.Loader.addComponent(function($) {
                 var cursor = cm.getCursor(),
                     token = cm.getTokenAt(cursor);
 
-                //if (token.type === 'string') {
-                    self.toggleGeoSelectionForToken(token, cursor);
-                //}
+                self.toggleGeoSelectionForToken(token, cursor);
+                self.toggleListEditorForToken(token, cursor);
 
                 if (token.type === 'target') {
                     self.showTargetHelp(token.string);
@@ -386,6 +400,23 @@ CSDLEditor.Loader.addComponent(function($) {
                     self.hideGeoSelection();
                 } else {
                     self.showGeoSelection(self.currentGeoSelectionType);
+                }
+
+                return false;
+            });
+
+            /**
+             * Show list editor window if possible.
+             */
+            this.$listBtn.click(function() {
+                if (self.$listBtn.is('.csdl-inactive')) {
+                    return false;
+                }
+
+                if (self.isListEditor) {
+                    self.hideListEditor();
+                } else {
+                    self.showListEditor();
                 }
 
                 return false;
@@ -575,6 +606,27 @@ CSDLEditor.Loader.addComponent(function($) {
         hideGeoSelection : function() {
             this.$geo.remove();
             this.$geo = null;
+        },
+
+        /**
+         * Shows list editor window.
+         */
+        showListEditor : function() {
+            if (this.$list && this.$list.length) {
+                this.hideListEditor();
+            }
+
+            this.$list = this.getTemplate('listEditor')
+                .appendTo(this.$container);
+            this.loadListEditor();
+        },
+
+        /**
+         * Hides visible list editor window.
+         */
+        hideListEditor : function() {
+            this.$list.remove();
+            this.$list = null;
         },
 
         /**
@@ -874,26 +926,93 @@ CSDLEditor.Loader.addComponent(function($) {
          * @return {Boolean}
          */
         toggleGeoSelectionForToken : function(token, cursor) {
-            if (token.type !== 'string') {
-                this.currentGeoSelectionType = '';
-                this.currentGeoSelectionValueToken = null;
-                this.currentGeoSelectionValueLine = null;
-                this.$geoBtn.addClass('csdl-inactive');
+            if (token.type === 'string') {
+                var prevToken = CodeMirror.getPreviousToken(this.codeMirror, cursor, token);
+
+                if (prevToken.type === 'operator' && $.inArray(prevToken.string, ['geo_polygon', 'geo_radius', 'geo_box']) >= 0) {
+                    // mark that it is possible to use geo selection now
+                    this.currentGeoSelectionType = prevToken.string.substr(4);
+                    this.$geoBtn.removeClass('csdl-inactive');
+
+                    this.currentGeoSelectionValueToken = token;
+                    this.currentGeoSelectionValueLine = cursor.line;
+
+                    return true;
+                }
+            }
+
+            this.currentGeoSelectionType = '';
+            this.currentGeoSelectionValueToken = null;
+            this.currentGeoSelectionValueLine = null;
+            this.$geoBtn.addClass('csdl-inactive');
+
+            return false;
+        },
+
+        /**
+         * Loads list editor.
+         *
+         * Used as a callback for functionality of "showListEditor".
+         */
+        loadListEditor : function() {
+            var self = this,
+                listEditor = new CSDLEditor.ListEditor(this, this.$list);
+
+            if (this.currentListValueToken) {
+                var val = $.string.trim(this.currentListValueToken.string, '"');
+                if (val.length) {
+                    listEditor.setValue(val);
+                }
+            }
+
+            this.$list.find('a[data-cancel]').click(function() {
+                self.hideListEditor();
+                self.codeMirror.focus();
                 return false;
+            });
+
+            this.$list.find('a[data-done]').click(function() {
+                var val = listEditor.getValue();
+
+                self.codeMirror.replaceRange('"' + val + '"', {
+                    line : self.currentListValueLine,
+                    ch : self.currentListValueToken.start
+                }, {
+                    line : self.currentListValueLine,
+                    ch : self.currentListValueToken.end
+                });
+
+                self.hideListEditor();
+                self.codeMirror.focus();
+                return false;
+            });
+        },
+
+        /**
+         * Decides whether or not it is possible to use list editor inside the given token
+         * (based on the previous token).
+         *
+         * @param  {CodeMirror.Token} token
+         * @param  {CodeMirror.Cursor} cursor
+         * @return {Boolean}
+         */
+        toggleListEditorForToken : function(token, cursor) {
+            if (token.type === 'string') {
+                var prevToken = CodeMirror.getPreviousToken(this.codeMirror, cursor, token);
+
+                if (prevToken.type === 'operator' && $.inArray(prevToken.string, ['contains_any', 'contains_phrase', 'any', 'in', 'url_in', 'all', 'contains_all']) >= 0) {
+                    // mark that it is possible to use list editor now
+                    this.$listBtn.removeClass('csdl-inactive');
+                    this.currentListValueToken = token;
+                    this.currentListValueLine = cursor.line;
+
+                    return true;
+                }
             }
 
-            var prevToken = CodeMirror.getPreviousToken(this.codeMirror, cursor, token);
-
-            if (prevToken.type === 'operator' && $.inArray(prevToken.string, ['geo_polygon', 'geo_radius', 'geo_box']) >= 0) {
-                // mark that it is possible to use geo selection now
-                this.currentGeoSelectionType = prevToken.string.substr(4);
-                this.$geoBtn.removeClass('csdl-inactive');
-
-                this.currentGeoSelectionValueToken = token;
-                this.currentGeoSelectionValueLine = cursor.line;
-
-                return true;
-            }
+            this.currentListValueToken = null;
+            this.currentListValueLine = null;
+            this.$listBtn.addClass('csdl-inactive');
 
             return false;
         },

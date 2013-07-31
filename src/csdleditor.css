@@ -42,6 +42,12 @@
 .csdl-container textarea {
   font: inherit;
 }
+.csdl-container label {
+  font-size: inherit;
+  line-height: 1;
+  margin: 0;
+  cursor: pointer;
+}
 .csdl-container article,
 .csdl-container aside,
 .csdl-container details,
@@ -60,6 +66,19 @@
   display: inline-block;
   *display: inline;
   *zoom: 1;
+}
+.csdl-container input[type="checkbox"] {
+  margin: 0;
+}
+.csdl-container h1,
+.csdl-container h2,
+.csdl-container h3,
+.csdl-container h4 {
+  font-size: 1;
+  font-weight: bold;
+  color: #68686d;
+  text-align: left;
+  margin: 5px 0;
 }
 .csdl-container img {
   border: 0;
@@ -163,6 +182,7 @@
   -moz-border-radius: 3px;
   -o-border-radius: 3px;
   border-radius: 3px;
+  min-width: 740px;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 13px;
   line-height: 19px;
@@ -213,6 +233,64 @@
 .csdl-container .csdl-maps-marker-url {
   background: url('images/maps-marker.png');
 }
+.csdl-container .csdl-button {
+  display: inline-block;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -o-border-radius: 3px;
+  border-radius: 3px;
+  text-transform: uppercase;
+  font-weight: bold;
+  margin: 0 6px;
+  padding: 3px 8px 2px;
+  border: 1px solid #d4d4d4;
+  background-color: #ffffff;
+  font-size: 10px;
+  color: #388cb8;
+}
+.csdl-container .csdl-button:hover {
+  color: #ff9933;
+  border-color: #bbb;
+}
+.csdl-container .csdl-button.done {
+  border-color: rgba(0, 0, 0, 0.14);
+  background: #388cb8;
+  color: #ffffff;
+}
+.csdl-container .csdl-button.done:hover {
+  background: #ff9933;
+}
+.csdl-container .csdl-button.csdl-button-icon {
+  padding-left: 24px;
+  background-image: url('images/csdl-header.png');
+  background-repeat: no-repeat;
+  background-size: 20px 260px;
+}
+.csdl-container .csdl-button.csdl-button-icon.csdl-sort-az {
+  background-position: 2px -184px;
+}
+.csdl-container .csdl-button.csdl-button-icon.csdl-copy {
+  background-position: 2px -210px;
+}
+.csdl-container .csdl-button.csdl-button-icon.csdl-import {
+  background-position: 2px -235px;
+}
+.csdl-container .csdl-icon {
+  display: inline-block;
+  width: 26px;
+  height: 26px;
+  background: url('images/csdl-icons.png') no-repeat;
+  vertical-align: middle;
+}
+.csdl-container .csdl-icon.csdl-delete {
+  background-position: 0 0;
+}
+.csdl-container .csdl-icon.csdl-reorder {
+  background-position: 0 -26px;
+}
+.csdl-container .zclip {
+  overflow: hidden;
+}
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - HEADER */
 .csdl-container .csdl-header,
 .csdl-container .csdl-footer {
@@ -241,7 +319,7 @@
   padding: 3px 8px 2px 24px;
   border: 1px solid #d4d4d4;
   background: #ffffff url('images/csdl-header.png') 2px -1px no-repeat;
-  background-size: 20px 156px;
+  background-size: 20px 260px;
   font-size: 10px;
   color: #388cb8;
 }
@@ -262,6 +340,9 @@
 }
 .csdl-container .csdl-header a.csdl-geoselect {
   background-position: 2px -53px;
+}
+.csdl-container .csdl-header a.csdl-listeditor {
+  background-position: 2px -158px;
   margin-right: 20px;
 }
 .csdl-container .csdl-header a.csdl-theme {
@@ -497,32 +578,247 @@ body > .csdl-popup .csdl-popup-content {
   display: inline;
   margin: 5px;
 }
-.csdl-container .csdl-geo .csdl-button {
-  display: inline-block;
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - LIST EDITOR */
+.csdl-container .csdl-list {
+  position: absolute;
+  z-index: 50;
+  top: 46px;
+  bottom: 46px;
+  width: 100%;
+  background: #f6f6f5;
+  text-align: center;
+}
+.csdl-container .csdl-list .csdl-list-bar {
+  padding: 5px;
+  border-bottom: 1px solid #d4d4d4;
+}
+.csdl-container .csdl-list .csdl-list-bar .csdl-button.done {
+  margin-right: 0;
+}
+.csdl-container .csdl-list .csdl-button.add {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  z-index: 51;
+}
+.csdl-container .csdl-list input.csdl-search {
+  display: none;
+  position: relative;
+  top: -1px;
+  height: 26px;
+  width: 150px;
+  margin: 0 10px;
+  line-height: 18px;
+  padding: 4px 6px;
+  font-size: 13px;
+  color: #2c2b33;
+  background: #ffffff;
+  vertical-align: middle;
+  border: 1px solid #d4d4d4;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
   -o-border-radius: 3px;
   border-radius: 3px;
-  text-transform: uppercase;
+  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), transparent 0 0 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), transparent 0 0 0;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), transparent 0 0 0;
+  -webkit-transition: all 0.14s ease-out;
+  -moz-transition: all 0.14s ease-out;
+  -o-transition: all 0.14s ease-out;
+  transition: all 0.14s ease-out;
+}
+.csdl-container .csdl-list input.csdl-search.on {
+  display: inline-block;
+}
+.csdl-container .csdl-list input.csdl-search:focus {
+  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+}
+.csdl-container .csdl-list .csdl-left {
+  text-align: left;
+  padding: 0;
+}
+.csdl-container .csdl-list .csdl-right {
+  text-align: right;
+  padding: 0;
+}
+.csdl-container .csdl-list .csdl-list-container {
+  position: absolute;
+  z-index: 50;
+  top: 37px;
+  bottom: 0;
+  width: 100%;
+  overflow: auto;
+}
+.csdl-container .csdl-list .csdl-list-container ol {
+  list-style: none;
+  width: 400px;
+  display: block;
+  margin: 0 auto;
+}
+.csdl-container .csdl-list .csdl-list-container ol li {
+  margin: 6px 0;
+  line-height: 26px;
+  text-align: left;
+}
+.csdl-container .csdl-list .csdl-list-container ol li:hover .csdl-icon.csdl-delete {
+  opacity: 1;
+}
+.csdl-container .csdl-list .csdl-list-container .csdl-icon {
+  width: 22px;
+}
+.csdl-container .csdl-list .csdl-list-container .csdl-icon.csdl-delete {
+  opacity: 0;
+}
+.csdl-container .csdl-list .csdl-list-container input {
+  display: inline-block;
+  height: 26px;
+  width: 300px;
+  margin: 0;
+  margin-left: 5px;
+  line-height: 18px;
+  padding: 4px 6px;
+  font-size: 14px;
+  color: #2c2b33;
+  background: transparent;
+  vertical-align: middle;
+  border: 1px solid transparent;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  -o-border-radius: 0;
+  border-radius: 0;
+  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0), transparent 0 0 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0), transparent 0 0 0;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0), transparent 0 0 0;
+  -webkit-transition: all 0.14s ease-out;
+  -moz-transition: all 0.14s ease-out;
+  -o-transition: all 0.14s ease-out;
+  transition: all 0.14s ease-out;
+  cursor: pointer;
+}
+.csdl-container .csdl-list .csdl-list-container input:focus {
+  background: #ffffff;
+  border: 1px solid #d4d4d4;
+  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), transparent 0 0 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), transparent 0 0 0;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), transparent 0 0 0;
+}
+.csdl-container .csdl-list .csdl-import-view {
+  position: absolute;
+  z-index: 55;
+  top: 38px;
+  left: 50%;
+  width: 650px;
+  margin-left: -325px;
+  overflow: auto;
+  background: #fbfbfb;
+  padding: 10px;
+  border: 1px solid #d4d4d4;
+  border-top: 0;
+  -moz-box-shadow: 0 3px 3px rgba(0, 0, 0, 0.05), transparent 0 0 0;
+  -webkit-box-shadow: 0 3px 3px rgba(0, 0, 0, 0.05), transparent 0 0 0;
+  box-shadow: 0 3px 3px rgba(0, 0, 0, 0.05), transparent 0 0 0;
+}
+.csdl-container .csdl-list .csdl-import-view .csdl-draganddrop {
+  border: 2px dashed #d4d4d4;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -o-border-radius: 3px;
+  border-radius: 3px;
+  padding: 20px;
+  width: 100%;
+  margin-bottom: 20px;
+  text-align: center;
+  background: #ffffff;
+  color: #68686d;
+  -webkit-transition: all 0.14s ease-out;
+  -moz-transition: all 0.14s ease-out;
+  -o-transition: all 0.14s ease-out;
+  transition: all 0.14s ease-out;
+}
+.csdl-container .csdl-list .csdl-import-view .csdl-draganddrop p {
+  margin: 0;
+  margin-bottom: 14px;
+}
+.csdl-container .csdl-list .csdl-import-view .csdl-draganddrop.over {
+  border-color: transparent;
+  -moz-box-shadow: 0 0 8px rgba(82, 168, 236, 0.6), transparent 0 0 0;
+  -webkit-box-shadow: 0 0 8px rgba(82, 168, 236, 0.6), transparent 0 0 0;
+  box-shadow: 0 0 8px rgba(82, 168, 236, 0.6), transparent 0 0 0;
+}
+.csdl-container .csdl-list .csdl-import-view .csdl-button.done {
+  margin-right: 0;
+}
+.csdl-container .csdl-list .csdl-import-view .csdl-error {
+  color: red;
   font-weight: bold;
-  margin: 0 6px;
-  padding: 3px 8px 2px;
+}
+.csdl-container .csdl-list .csdl-import-view textarea {
+  display: inline-block;
+  height: 100px;
+  width: 100%;
+  line-height: 18px;
+  padding: 4px 6px;
+  font-size: 14px;
+  color: #2c2b33;
+  background: #ffffff;
+  border: 1px solid #d4d4d4;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  -o-border-radius: 0;
+  border-radius: 0;
+  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0), transparent 0 0 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0), transparent 0 0 0;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0), transparent 0 0 0;
+  -webkit-transition: all 0.14s ease-out;
+  -moz-transition: all 0.14s ease-out;
+  -o-transition: all 0.14s ease-out;
+  transition: all 0.14s ease-out;
+}
+.csdl-container .csdl-list .csdl-import-view textarea:focus {
+  background: #ffffff;
+  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+}
+.csdl-container .csdl-list .csdl-import-view table {
+  width: 100%;
+  margin: 0;
+  margin-bottom: 10px;
+  border-collapse: collapse;
+  border-spacing: 0;
   border: 1px solid #d4d4d4;
   background: #ffffff;
-  font-size: 10px;
-  color: #388cb8;
 }
-.csdl-container .csdl-geo .csdl-button:hover {
-  color: #ff9933;
-  border-color: #bbb;
+.csdl-container .csdl-list .csdl-import-view table td {
+  padding: 2px;
 }
-.csdl-container .csdl-geo .csdl-button.done {
-  border-color: rgba(0, 0, 0, 0.14);
-  background: #388cb8;
-  color: #ffffff;
+.csdl-container .csdl-list .csdl-import-view table tr.ignored td {
+  text-decoration: line-through;
+  color: #d4d4d4;
 }
-.csdl-container .csdl-geo .csdl-button.done:hover {
-  background: #ff9933;
+.csdl-container .csdl-list .csdl-import-view table td,
+.csdl-container .csdl-list .csdl-import-view table th {
+  border: 1px solid #d4d4d4;
+}
+.csdl-container .csdl-list .csdl-import-view table tr:first-child th {
+  border-top: 0;
+}
+.csdl-container .csdl-list .csdl-import-view table tr:last-child td {
+  border-bottom: 0;
+}
+.csdl-container .csdl-list .csdl-import-view table tr td:first-child,
+.csdl-container .csdl-list .csdl-import-view table tr th:first-child {
+  border-left: 0;
+}
+.csdl-container .csdl-list .csdl-import-view table tr td:last-child,
+.csdl-container .csdl-list .csdl-import-view table tr th:last-child {
+  border-right: 0;
+}
+.csdl-container .csdl-list .csdl-import-view table tfoot tr td {
+  text-align: center;
+  font-size: 0.8em;
 }
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - LIGHT THEME */
 .csdl-container.csdl-theme-light .CodeMirror {

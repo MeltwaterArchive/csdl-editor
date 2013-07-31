@@ -98,6 +98,63 @@ CSDLEditor.Loader.addComponent(function($) {
                 }
              
                 return ws.indexOf(str.charAt(0)) === -1 ? str : '';
+            },
+
+            /**
+             * Generate a random string of a given length.
+             *
+             * @param {Number} length[optional] Length of the string. Default: 16
+             * @param {Boolean} capitals[optional] Should the string include capital letters? Default: true
+             * @param {Boolean} punctuation[optional] Should the string include special characters like punctuation? Default: false
+             * @return {String}
+             */
+            random : function(length, capitals, punctuation) {
+                length = length || 16;
+                capitals = !(!capitals || false);
+                punctuation = punctuation || false;
+
+                var str = '',
+                    chars = '1234567890abcdefghijkmnopqrstuvwxyz';
+
+                if (capitals) {
+                    chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                }
+
+                if (punctuation) {
+                    chars += '?!.,;:^#@&';
+                }
+
+                for (var i = 1; i <= length; i++) {
+                    str = str + chars.charAt(Math.floor(Math.random() * (chars.length - 1)));
+                }
+
+                return str;
+            },
+
+            /**
+             * Escapes HTML from the string.
+             *
+             * @param {String} str String to be HTML-escaped.
+             * @return {String}
+             */
+            escapeHtml : function(str) {
+                return str.replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;');
+            },
+
+            /**
+             * Unescapes HTML from the string.
+             *
+             * @param {String} str String to be HTML-unescaped.
+             * @return {String}
+             */
+            unescapeHtml : function(str) {
+                return str.replace(/&amp;/g, '&')
+                    .replace(/&lt;/g, '<')
+                    .replace(/&gt;/g, '>')
+                    .replace(/&quot;/g, '"');
             }
 
         },
@@ -149,6 +206,38 @@ CSDLEditor.Loader.addComponent(function($) {
 
         }
 
+    });
+
+    /* ################################################################
+     * JQUERY EXTENSIONS
+     * ################################################################ */
+    /**
+     * Extend with some more custom functionality.
+     */
+    $.fn.extend({
+
+
+        /**
+         * $.quickEach() replicates the functionality of $.each() but allows 'this'
+         * to be used as a jQuery object without the need to wrap it using '$(this)'.
+         * The performance boost comes from internally recycling a single jQuery
+         * object instead of wrapping each iteration in a brand new one.
+         *
+         * @see https://gist.github.com/Striker21/1352993
+         * 
+         * @param  {[type]} f [description]
+         * @return {[type]}   [description]
+         */
+        quickEach : function(f) {
+            var j = $([0]),
+                i = -1,
+                l = this.length,
+                c;
+
+            while(++i < l && (c = j[0] = this[i]) && f.call(j, i, c) !== false) {}
+
+            return this;
+        }
     });
 
 });

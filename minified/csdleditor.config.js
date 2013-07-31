@@ -49,7 +49,9 @@ var CSDLEditorConfig = CSDLEditorConfig || {
         'geo_radius',
         'geo_polygon',
         'pcre',
-        'contains_phrase'
+        'contains_phrase',
+        'all',
+        'contains_all'
     ],
 
     logical : [
