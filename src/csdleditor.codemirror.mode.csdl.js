@@ -111,11 +111,6 @@
         stream.eatWhile(/^[^\s\(\)\{\}]/);
         var word = stream.current().toLowerCase();
 
-        // is it a target?
-        if (targets.hasOwnProperty(word)) {
-            return 'target';
-        }
-
         // is it an operator?
         if (operators.hasOwnProperty(word)) {
             return 'operator';
@@ -131,6 +126,16 @@
             return 'keyword';
         }
 
+        // include namespaced tag as a keyword as well
+        if (word.substr(0, 4) === 'tag.') {
+            return 'keyword';
+        }
+
+        // include namespaced tags as a keyword as well
+        if (word.substr(0, 5) === 'tags.') {
+            return 'keyword';
+        }
+
         // is it a start of punctuation control tag?
         if (word === '[keep') {
             stream.eatWhile(/^[^\s]/);
@@ -140,6 +145,11 @@
         // is it a punctuation control?
         if (punctuationControl.hasOwnProperty(word)) {
             return 'punctuation';
+        }
+
+        // is it a target? (checking as last for better performance)
+        if (targets.hasOwnProperty(word)) {
+            return 'target';
         }
 
         // didn't match any token so return null

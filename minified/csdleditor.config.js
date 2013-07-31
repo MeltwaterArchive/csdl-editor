@@ -63,6 +63,7 @@ var CSDLEditorConfig = CSDLEditorConfig || {
         'not',
         'stream',
         'tag',
+        'tags',
         'return'
     ],
 
