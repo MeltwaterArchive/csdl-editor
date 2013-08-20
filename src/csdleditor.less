@@ -10,6 +10,8 @@
 @custom: #68686d;
 @blue: #388cb8;
 @orange: #ff9933;
+@black: #000;
+@blackTrans: rgba(0, 0, 0, 0.75);
 
 // assets
 @headerImg: 'images/csdl-header.png';
@@ -67,7 +69,7 @@
     audio[controls], canvas, video { display: inline-block; *display: inline; *zoom: 1; }
     input[type="checkbox"] {margin:0;}
 
-    h1,h2,h3,h4 {font-size: 1;font-weight:bold;color:@custom;text-align:left;margin:5px 0;}
+    h1,h2,h3,h4,h5 {font-size: 1;font-weight:bold;color:@custom;text-align:left;margin:5px 0;}
 
     img { border: 0; -ms-interpolation-mode: bicubic; display: block;}
     img, object, embed { max-width: 100%; height: auto; }
@@ -229,14 +231,14 @@
         display: inline-block;
         width: 26px;
         height: 26px;
-        background: url('images/csdl-icons.png') no-repeat;
+        background: url('images/csdl-icons.png?1') no-repeat;
         vertical-align: middle;
 
         &.csdl-delete {
             background-position: 0 0;
         }
 
-        &.csdl-reorder {
+        &.csdl-edit {
             background-position: 0 -26px;
         }
     }
@@ -585,7 +587,6 @@ body > .csdl-popup {
     bottom: 46px;
     width: 100%;
     background: @border;
-    text-align: center;
 
     .csdl-list-bar {
         padding: 5px;
@@ -604,7 +605,7 @@ body > .csdl-popup {
     }
 
     input.csdl-search {
-        display: none;
+        display: inline-block;
         position: relative;
         top: -1px;
         height: 26px;
@@ -620,10 +621,6 @@ body > .csdl-popup {
         .border-radius(3px);
         .box-shadow(inset 0 1px 1px rgba(0, 0, 0, 0.075));
         .transition(all 0.14s ease-out);
-
-        &.on {
-            display: inline-block;
-        }
 
         &:focus {
             .box-shadow(inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6));
@@ -648,55 +645,152 @@ body > .csdl-popup {
         width: 100%;
         overflow: auto;
 
+        h5 {
+            margin: 20px 10px;
+            color: inherit;
+
+            small {
+                color: inherit;
+                font-size: 100%;
+            }
+        }
+
+        p {
+            margin: 20px 10px;
+        }
+
         ol {
             list-style: none;
-            width: 400px;
             display: block;
-            margin: 0 auto;
+            margin: 5px;
 
             li {
-                margin: 6px 0;
-                line-height: 26px;
-                text-align: left;
+                display: inline-block;
+                position: relative;
+                margin: 6px 3px;
+                margin-right: 0;
+                float: left;
 
-                &:hover {
-                    .csdl-icon.csdl-delete {
-                        opacity: 1;
+                .csdl-list-item {
+                    display: inline-block;
+                    background: @white;
+                    border: 1px solid @dborder;
+                    padding: 5px 11px;
+                    margin: 0 3px;
+                    .border-radius(3px);
+                    overflow: hidden;
+
+                    span {
+                        display: inline-block;
+                        max-width: 150px;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                    }
+
+                    input {
+                        display: none;
                     }
                 }
+
+                .csdl-list-tooltip {
+                    visibility: hidden;
+                    display: block;
+                    position: absolute;
+                    top: -28px;
+                    height: 26px;
+                    width: 52px;
+                    left: 50%;
+                    margin-left: -26px;
+                    background: @black;
+                    .border-radius(3px);
+
+                    .csdl-list-tooltip-arrow {
+                        display: block;
+                        position: relative;
+
+                        &:after, &:before {
+                            top: 100%;
+                            border: 5px solid transparent;
+                            content: " ";
+                            height: 0;
+                            width: 0;
+                            position: absolute;
+                        }
+
+                        &:after {
+                            border-top-color: @black;
+                            left: 50%;
+                            margin-left: -5px;
+                        }
+
+                        &:before {
+                            border-top-color: @black;
+                            left: 50%;
+                            margin-left: -5px;
+                        }
+                    }
+                }
+
+                &.csdl-list-active {
+                    .csdl-list-item {
+                        padding: 3px 5px;
+
+                        span {
+                            display: none;
+                        }
+
+                        input {
+                            display: inline-block;
+                            padding: 11px 5px;
+                            max-width: 200px;
+                        }
+                    }
+                }
+
+                &:hover .csdl-list-tooltip {
+                    visibility: visible;
+                }
             }
-        }
 
-        .csdl-icon {
-            width: 22px;
-
-            &.csdl-delete {
-                opacity: 0;
+            li.csdl-list-add {
+                display: inline-block;
+                margin: 6px;
+                margin-right: 9px;
+                padding-right: 15px;
+                border-right: 1px solid @dborder;
+                width: 200px;
             }
-        }
 
-        input {
-            display: inline-block;
-            height: 26px;
-            width: 300px;
-            margin: 0;
-            margin-left: 5px;
-            line-height: 18px;
-            padding: 4px 6px;
-            font-size: 14px;
-            color: @main;
-            background: transparent;
-            vertical-align: middle;
-            border: 1px solid transparent;
-            .border-radius(0);
-            .box-shadow(inset 0 1px 1px rgba(0, 0, 0, 0));
-            .transition(all 0.14s ease-out);
-            cursor: pointer;
+            li.csdl-list-placeholder {
+                width: 100px;
+                height: 32px;
+                border: 1px dashed @dborder;
+                .border-radius(3px);
+            }
 
-            &:focus {
-                background: @white;
+            input {
+                display: inline-block;
+                margin: 0;
+                line-height: 18px;
+                padding: 4px 6px;
+                font-size: 13px;
+                color: @main;
+                background: white;
                 border: 1px solid @dborder;
-                .box-shadow(inset 0 1px 1px rgba(0, 0, 0, 0.075));
+                vertical-align: middle;
+                .border-radius(3px);
+                .box-shadow(inset 0 1px 1px rgba(0, 0, 0, 0));
+                cursor: pointer;
+
+                &.csdl-list-add-input {
+                    height: 32px;
+                    width: 100%;
+                }
+
+                &:focus {
+                    .box-shadow(inset 0 1px 1px rgba(0, 0, 0, 0.075));
+                }
             }
         }
     }

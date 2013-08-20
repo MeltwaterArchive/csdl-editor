@@ -10,11 +10,14 @@ CSDLEditor.Loader.addComponent(function($) {
     /** @type {Object} A map of keys used for better readability. */
     KEYS = {
         BACKSPACE : 8,
+        TAB : 9,
         DELETE : 46,
         ENTER : 13,
         ESC : 27,
         UP : 38,
-        DOWN : 40
+        DOWN : 40,
+        LEFT : 37,
+        RIGHT : 39
     };
 
     /**
@@ -31,94 +34,133 @@ CSDLEditor.Loader.addComponent(function($) {
         this.$list = this.$view.find('.csdl-list-elements');
 
         /* setup links to important elements */
-        this.$addBtn = this.$view.find('a[data-add]');
         this.$copyBtn = this.$view.find('a[data-copy]').attr('id', 'csdl-copy-to-clipboard-' + Math.floor(Math.random() * 10000));
         this.$importBtn = this.$view.find('a[data-import]');
         this.$searchInput = this.$view.find('input[name="search"]');
+        this.$counter = this.$view.find('[data-counter]');
 
         /* make the list sortable */
         this.$list.sortable({
-            axis : 'y',
             containment: 'parent',
-            handle : 'a[data-handle]'
+            cursor : 'move',
+            handle : '[data-handle]',
+            helper : function(ev, $el) {
+                return $('<li />').html($el.find('[data-item]').clone());
+            },
+            placeholder : 'csdl-list-placeholder',
+            tolerance : 'pointer',
+            items : '> li:not([data-add-item])'
         });
 
         /*
          * REGISTER LISTENERS
          */
         /**
-         * When pressed ENTER inside a list input then create a new empty input after it and focus in it.
+         * When pressed ENTER in the add new input then add new item.
          */
-        this.$list.on('keypress', 'input', function(ev) {
-            if (ev.which === KEYS.ENTER) {
-                var $el = $(this),
-                    $li = $el.closest('li'),
-                    $item = self.addItem('', $li);
-                $item.find('input').focus();
-            }
-        });
-
-        /**
-         * Navigate with UP and DOWN keys and blur on ESCAPE.
-         */
-        this.$list.on('keyup', 'input', function(ev) {
-            if ($.inArray(ev.which, [KEYS.UP, KEYS.DOWN, KEYS.ESC]) === -1) {
+        this.$list.on('keypress', '[data-add-item] input', function(ev) {
+            if (ev.which !== KEYS.ENTER) {
                 return;
             }
 
             var $el = $(this),
-                $li = $el.closest('li');
+                val = this.value;
 
-            switch(ev.which) {
-                case KEYS.UP:
-                    var $prev = $li.prev('li');
-                    if ($prev.length) {
-                        $prev.find('input').focus();
-                    }
-                break;
+            if (!$.string.trim(val).length) {
+                return;
+            }
 
-                case KEYS.DOWN:
-                    var $next = $li.next('li');
-                    if ($next.length) {
-                        $next.find('input').focus();
-                    }
-                break;
+            self.addItem(val);
 
-                case KEYS.ESC:
-                    $el.blur();
-                break;
+            $el.val('');
+        });
+
+        /**
+         * When clicked on a list item then make it editable and focus in the input.
+         */
+        this.$list.on('click', 'li:not([data-add-item])', function() {
+            var $el = $(this),
+                spanWidth = $el.find('span').width();
+
+            self.$list.find('li.csdl-list-active').removeClass('csdl-list-active');
+
+            $el.addClass('csdl-list-active')
+                .find('input').width(spanWidth).focus();
+        });
+
+        /**
+         * Pressing ENTER inside of an item input will blur it.
+         */
+        this.$list.on('keypress', 'li:not([data-add-item]) input', function(ev) {
+            if (ev.which === KEYS.ENTER) {
+                $(this).blur();
             }
         });
 
         /**
          * When blurred an item input then check if it's not empty and if it is remove it.
          */
-        this.$list.on('blur', 'input', function() {
+        this.$list.on('blur', 'li:not([data-add-item]) input', function() {
+            var $li = $(this).closest('li');
+
             if (!$.string.trim(this.value).length) {
-                var $li = $(this).closest('li');
                 $li.fadeOut(200, function() {
                     $li.remove();
+                    self.updateCounter();
                 });
+                return;
             }
+
+            $li.removeClass('csdl-list-active')
+                .find('span').html(this.value);
+        });
+
+        /**
+         * Navigate with TAB key (press SHIFT to just to prev) and blur on ESCAPE.
+         */
+        this.$list.on('keydown', 'li:not([data-add-item]) input', function(ev) {
+            if ($.inArray(ev.which, [KEYS.TAB, KEYS.ESC]) === -1) {
+                return;
+            }
+
+            var $el = $(this),
+                $li = $el.closest('li'),
+                ret;
+
+            switch(ev.which) {
+                case KEYS.TAB:
+                    var $next = (ev.shiftKey) ? $li.prev('li') : $li.next('li');
+                    if ($next.length) {
+                        $next.click();
+                    }
+                    ret = false;
+                break;
+
+                case KEYS.ESC:
+                    $el.blur();
+                break;
+            }
+
+            return ret;
+        });
+
+        /**
+         * When clicked on the edit trigger then trigger click on the list item and therefore focus in the edit field.
+         */
+        this.$list.on('click', '[data-edit]', function() {
+            $(this).closest('li').click();
+            return false;
         });
 
         /**
          * Delete list items when clicked on delete trigger.
          */
-        this.$list.on('click', 'a[data-delete]', function() {
+        this.$list.on('click', '[data-delete]', function() {
             var $li = $(this).closest('li');
             $li.fadeOut(200, function() {
                 $li.remove();
+                self.updateCounter();
             });
-            return false;
-        });
-
-        /**
-         * Add new item to the bottom of the list when clicked on the ADD button.
-         */
-        this.$addBtn.click(function() {
-            var $item = self.addItem('');
-            $item.find('input').focus();
             return false;
         });
 
@@ -126,7 +168,7 @@ CSDLEditor.Loader.addComponent(function($) {
          * Sort the list alphabetically when clicked on the sort button.
          */
         this.$view.find('a[data-sort]').click(function() {
-            var items = self.$list.children().get();
+            var items = self.$list.children().not('[data-add-item]').get();
 
             items.sort(function(a, b) {
                 return $(a).find('input').val().toUpperCase().localeCompare($(b).find('input').val().toUpperCase());
@@ -176,15 +218,15 @@ CSDLEditor.Loader.addComponent(function($) {
             // when pressed ESCAPE then reset the search
             if (ev.which === KEYS.ESC) {
                 self.$searchInput.val('').blur();
-                self.$list.children().fadeIn(100);
+                self.$list.children().not('[data-add-item]').fadeIn(100);
                 return;
             }
 
             var search = self.$searchInput.val(),
-                regexPattern = new RegExp('^' + search, 'gi');
+                regexPattern = new RegExp('^' + search, 'i');
 
-            self.$list.children().quickEach(function() {
-                if (regexPattern.test(this.find('input').val())) {
+            self.$list.children().not('[data-add-item]').quickEach(function() {
+                if (regexPattern.test(this.find('input')[0].value)) {
                     this.fadeIn(100);
                 } else {
                     this.fadeOut(100);
@@ -224,7 +266,7 @@ CSDLEditor.Loader.addComponent(function($) {
 
             if (refresh) {
                 this.$list.sortable('refresh');
-                this.$searchInput[this.$list.children().length > 30 ? 'addClass' : 'removeClass']('on');
+                this.updateCounter();
             }
 
             return $item;
@@ -238,7 +280,7 @@ CSDLEditor.Loader.addComponent(function($) {
          */
         addItems : function(items, replace) {
             if (replace) {
-               this.$list.empty(); 
+               this.$list.find('li:not([data-add-item])').remove(); 
             }
 
             for(var i = 0; i < items.length; i++) {
@@ -246,6 +288,7 @@ CSDLEditor.Loader.addComponent(function($) {
             }
 
             this.$list.sortable('refresh');
+            this.updateCounter();
         },
 
         /**
@@ -272,7 +315,7 @@ CSDLEditor.Loader.addComponent(function($) {
 
             // now that all data is there, refresh the sortable
             this.$list.sortable('refresh');
-            this.$searchInput[this.$list.children().length > 30 ? 'addClass' : 'removeClass']('on');
+            this.updateCounter();
         },
 
         /**
@@ -283,7 +326,7 @@ CSDLEditor.Loader.addComponent(function($) {
         getValue : function() {
             var values = [];
 
-            this.$list.find('input').quickEach(function() {
+            this.$list.find('li:not([data-add-item]) input').quickEach(function() {
                 var val = this.val();
                 if (!$.string.trim(val).length) {
                     return true;
@@ -293,6 +336,19 @@ CSDLEditor.Loader.addComponent(function($) {
             });
 
             return values.join(',');
+        },
+
+        /**
+         * Update the items counter with number of list items in the editor.
+         *
+         * Also returns the number.
+         *
+         * @return {Number}
+         */
+        updateCounter : function() {
+            var count = this.$list.find('li:not([data-add-item])').length;
+            this.$counter.html(count);
+            return count;
         },
 
         /* ##########################

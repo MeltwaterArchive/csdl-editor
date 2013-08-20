@@ -1001,6 +1001,11 @@ CSDLEditor.Loader.addComponent(function($) {
             if (token.type === 'string') {
                 var prevToken = CodeMirror.getPreviousToken(this.codeMirror, cursor, token);
 
+                // if punctuation token then skip it
+                if (prevToken.type === 'punctuation') {
+                    prevToken = CodeMirror.getPreviousToken(this.codeMirror, cursor, prevToken);
+                }
+
                 if (prevToken.type === 'operator' && $.inArray(prevToken.string, ['contains_any', 'contains_phrase', 'any', 'in', 'url_in', 'all', 'contains_all']) >= 0) {
                     // mark that it is possible to use list editor now
                     this.$listBtn.removeClass('csdl-inactive');

@@ -73,7 +73,8 @@
 .csdl-container h1,
 .csdl-container h2,
 .csdl-container h3,
-.csdl-container h4 {
+.csdl-container h4,
+.csdl-container h5 {
   font-size: 1;
   font-weight: bold;
   color: #68686d;
@@ -279,13 +280,13 @@
   display: inline-block;
   width: 26px;
   height: 26px;
-  background: url('images/csdl-icons.png') no-repeat;
+  background: url('images/csdl-icons.png?1') no-repeat;
   vertical-align: middle;
 }
 .csdl-container .csdl-icon.csdl-delete {
   background-position: 0 0;
 }
-.csdl-container .csdl-icon.csdl-reorder {
+.csdl-container .csdl-icon.csdl-edit {
   background-position: 0 -26px;
 }
 .csdl-container .zclip {
@@ -586,7 +587,6 @@ body > .csdl-popup .csdl-popup-content {
   bottom: 46px;
   width: 100%;
   background: #f6f6f5;
-  text-align: center;
 }
 .csdl-container .csdl-list .csdl-list-bar {
   padding: 5px;
@@ -602,7 +602,7 @@ body > .csdl-popup .csdl-popup-content {
   z-index: 51;
 }
 .csdl-container .csdl-list input.csdl-search {
-  display: none;
+  display: inline-block;
   position: relative;
   top: -1px;
   height: 26px;
@@ -627,9 +627,6 @@ body > .csdl-popup .csdl-popup-content {
   -o-transition: all 0.14s ease-out;
   transition: all 0.14s ease-out;
 }
-.csdl-container .csdl-list input.csdl-search.on {
-  display: inline-block;
-}
 .csdl-container .csdl-list input.csdl-search:focus {
   -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
@@ -651,55 +648,144 @@ body > .csdl-popup .csdl-popup-content {
   width: 100%;
   overflow: auto;
 }
+.csdl-container .csdl-list .csdl-list-container h5 {
+  margin: 20px 10px;
+  color: inherit;
+}
+.csdl-container .csdl-list .csdl-list-container h5 small {
+  color: inherit;
+  font-size: 100%;
+}
+.csdl-container .csdl-list .csdl-list-container p {
+  margin: 20px 10px;
+}
 .csdl-container .csdl-list .csdl-list-container ol {
   list-style: none;
-  width: 400px;
   display: block;
-  margin: 0 auto;
+  margin: 5px;
 }
 .csdl-container .csdl-list .csdl-list-container ol li {
-  margin: 6px 0;
-  line-height: 26px;
-  text-align: left;
-}
-.csdl-container .csdl-list .csdl-list-container ol li:hover .csdl-icon.csdl-delete {
-  opacity: 1;
-}
-.csdl-container .csdl-list .csdl-list-container .csdl-icon {
-  width: 22px;
-}
-.csdl-container .csdl-list .csdl-list-container .csdl-icon.csdl-delete {
-  opacity: 0;
-}
-.csdl-container .csdl-list .csdl-list-container input {
   display: inline-block;
+  position: relative;
+  margin: 6px 3px;
+  margin-right: 0;
+  float: left;
+}
+.csdl-container .csdl-list .csdl-list-container ol li .csdl-list-item {
+  display: inline-block;
+  background: #ffffff;
+  border: 1px solid #d4d4d4;
+  padding: 5px 11px;
+  margin: 0 3px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -o-border-radius: 3px;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.csdl-container .csdl-list .csdl-list-container ol li .csdl-list-item span {
+  display: inline-block;
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.csdl-container .csdl-list .csdl-list-container ol li .csdl-list-item input {
+  display: none;
+}
+.csdl-container .csdl-list .csdl-list-container ol li .csdl-list-tooltip {
+  visibility: hidden;
+  display: block;
+  position: absolute;
+  top: -28px;
   height: 26px;
-  width: 300px;
+  width: 52px;
+  left: 50%;
+  margin-left: -26px;
+  background: #000000;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -o-border-radius: 3px;
+  border-radius: 3px;
+}
+.csdl-container .csdl-list .csdl-list-container ol li .csdl-list-tooltip .csdl-list-tooltip-arrow {
+  display: block;
+  position: relative;
+}
+.csdl-container .csdl-list .csdl-list-container ol li .csdl-list-tooltip .csdl-list-tooltip-arrow:after,
+.csdl-container .csdl-list .csdl-list-container ol li .csdl-list-tooltip .csdl-list-tooltip-arrow:before {
+  top: 100%;
+  border: 5px solid transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+}
+.csdl-container .csdl-list .csdl-list-container ol li .csdl-list-tooltip .csdl-list-tooltip-arrow:after {
+  border-top-color: #000000;
+  left: 50%;
+  margin-left: -5px;
+}
+.csdl-container .csdl-list .csdl-list-container ol li .csdl-list-tooltip .csdl-list-tooltip-arrow:before {
+  border-top-color: #000000;
+  left: 50%;
+  margin-left: -5px;
+}
+.csdl-container .csdl-list .csdl-list-container ol li.csdl-list-active .csdl-list-item {
+  padding: 3px 5px;
+}
+.csdl-container .csdl-list .csdl-list-container ol li.csdl-list-active .csdl-list-item span {
+  display: none;
+}
+.csdl-container .csdl-list .csdl-list-container ol li.csdl-list-active .csdl-list-item input {
+  display: inline-block;
+  padding: 11px 5px;
+  max-width: 200px;
+}
+.csdl-container .csdl-list .csdl-list-container ol li:hover .csdl-list-tooltip {
+  visibility: visible;
+}
+.csdl-container .csdl-list .csdl-list-container ol li.csdl-list-add {
+  display: inline-block;
+  margin: 6px;
+  margin-right: 9px;
+  padding-right: 15px;
+  border-right: 1px solid #d4d4d4;
+  width: 200px;
+}
+.csdl-container .csdl-list .csdl-list-container ol li.csdl-list-placeholder {
+  width: 100px;
+  height: 32px;
+  border: 1px dashed #d4d4d4;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -o-border-radius: 3px;
+  border-radius: 3px;
+}
+.csdl-container .csdl-list .csdl-list-container ol input {
+  display: inline-block;
   margin: 0;
-  margin-left: 5px;
   line-height: 18px;
   padding: 4px 6px;
-  font-size: 14px;
+  font-size: 13px;
   color: #2c2b33;
-  background: transparent;
+  background: white;
+  border: 1px solid #d4d4d4;
   vertical-align: middle;
-  border: 1px solid transparent;
-  -webkit-border-radius: 0;
-  -moz-border-radius: 0;
-  -o-border-radius: 0;
-  border-radius: 0;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -o-border-radius: 3px;
+  border-radius: 3px;
   -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0), transparent 0 0 0;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0), transparent 0 0 0;
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0), transparent 0 0 0;
-  -webkit-transition: all 0.14s ease-out;
-  -moz-transition: all 0.14s ease-out;
-  -o-transition: all 0.14s ease-out;
-  transition: all 0.14s ease-out;
   cursor: pointer;
 }
-.csdl-container .csdl-list .csdl-list-container input:focus {
-  background: #ffffff;
-  border: 1px solid #d4d4d4;
+.csdl-container .csdl-list .csdl-list-container ol input.csdl-list-add-input {
+  height: 32px;
+  width: 100%;
+}
+.csdl-container .csdl-list .csdl-list-container ol input:focus {
   -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), transparent 0 0 0;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), transparent 0 0 0;
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), transparent 0 0 0;
