@@ -194,9 +194,9 @@ CSDLEditor.Loader.addComponent(function($) {
             },
             afterCopy : function() {
                 clearTimeout(copyButtonTransitionTimeout);
-                self.$copyBtn.html('Copied');
+                self.$copyBtn.find('span').html('Copied');
                 setTimeout(function() {
-                    self.$copyBtn.html('Copy to Clipboard');
+                    self.$copyBtn.find('span').html('Copy to Clipboard');
                 }, 3000);
             }
         });
@@ -348,6 +348,15 @@ CSDLEditor.Loader.addComponent(function($) {
         updateCounter : function() {
             var count = this.$list.find('li:not([data-add-item])').length;
             this.$counter.html(count);
+
+            if (count) {
+                this.$view.find('[data-list-cta]').hide();
+                this.$view.find('[data-list-info]').show();
+            } else {
+                this.$view.find('[data-list-cta]').show();
+                this.$view.find('[data-list-info]').hide();
+            }
+
             return count;
         },
 
@@ -371,13 +380,13 @@ CSDLEditor.Loader.addComponent(function($) {
         showImportView : function() {
             var self = this,
                 $view = this.$importView = this.editor.getTemplate('listEditor_import')
-                    .appendTo(this.$view).hide(),
+                    .appendTo(this.$view),
                 $replaceCheckbox = $view.find('input[name="replace"]');
 
             // should we also display the file upload? check for availability
             if (window.File && window.FileReader && window.FileList && window.Blob) {
                 var $fileUploadView = this.editor.getTemplate('listEditor_import_file')
-                        .prependTo($view.find('[data-step-one]')),
+                        .prependTo($view.find('[data-step-one]')).filter('[data-import-file]'),
                     $fileUploadButton = $fileUploadView.find('input[type="file"]'),
                     /**
                      * Read a CSV file and parse it.
@@ -450,7 +459,6 @@ CSDLEditor.Loader.addComponent(function($) {
                 });
             }
 
-            $view.slideDown(200);
             this.importing = true;
 
             /**
@@ -603,7 +611,7 @@ CSDLEditor.Loader.addComponent(function($) {
 
                 // need to select at least one
                 if (!columns.length) {
-                    self.$importView.find('p[data-info]').addClass('csdl-error');
+                    self.$importView.find('thead').addClass('csdl-error');
                     return false;
                 }
 

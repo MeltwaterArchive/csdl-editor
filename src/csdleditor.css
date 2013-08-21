@@ -77,7 +77,7 @@
 .csdl-container h5 {
   font-size: 1;
   font-weight: bold;
-  color: #68686d;
+  color: #000;
   text-align: left;
   margin: 5px 0;
 }
@@ -113,6 +113,9 @@
   min-height: 1px;
   padding: 0 10px;
   position: relative;
+}
+.csdl-container .csdl-column.no-padding {
+  padding: 0;
 }
 .csdl-container [class*="csdl-column"] + [class*="csdl-column"]:last-child {
   float: right;
@@ -234,47 +237,161 @@
 .csdl-container .csdl-maps-marker-url {
   background: url('images/maps-marker.png');
 }
-.csdl-container .csdl-button {
+.csdl-container a.csdl-button {
   display: inline-block;
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  -o-border-radius: 3px;
-  border-radius: 3px;
-  text-transform: uppercase;
   font-weight: bold;
-  margin: 0 6px;
-  padding: 3px 8px 2px;
+  color: #333333;
+  font-size: 11px;
+  line-height: 24px;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
+  margin: 0 2px;
+  padding: 2px 5px;
+  background-color: #f5f5f5;
+  background-image: -moz-linear-gradient(top, #ffffff, #e6e6e6);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#e6e6e6));
+  background-image: -webkit-linear-gradient(top, #ffffff, #e6e6e6);
+  background-image: -o-linear-gradient(top, #ffffff, #e6e6e6);
+  background-image: linear-gradient(to bottom, #ffffff, #e6e6e6);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff', endColorstr='#ffe6e6e6', GradientType=0);
   border: 1px solid #d4d4d4;
-  background-color: #ffffff;
-  font-size: 10px;
-  color: #388cb8;
+  border-color: #e6e6e6 #e6e6e6 #bfbfbf;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  border-bottom-color: #bbbbbb;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -o-border-radius: 4px;
+  border-radius: 4px;
+  vertical-align: middle;
+  cursor: pointer;
+  -moz-box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05), transparent 0 0 0;
+  -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05), transparent 0 0 0;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05), transparent 0 0 0;
 }
-.csdl-container .csdl-button:hover {
-  color: #ff9933;
-  border-color: #bbb;
+.csdl-container a.csdl-button:hover {
+  color: #333333;
+  border-color: #bbbbbb;
 }
-.csdl-container .csdl-button.done {
-  border-color: rgba(0, 0, 0, 0.14);
-  background: #388cb8;
+.csdl-container a.csdl-button:active {
+  background-color: #cccccc \9;
+  -moz-box-shadow: inset 0 2px 4px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05), transparent 0 0 0;
+  -webkit-box-shadow: inset 0 2px 4px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05), transparent 0 0 0;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05), transparent 0 0 0;
+}
+.csdl-container a.csdl-button.csdl-inactive {
+  cursor: default;
+  opacity: 0.65;
+  filter: alpha(opacity=65);
+  -moz-box-shadow: transparent 0 0 0, transparent 0 0 0;
+  -webkit-box-shadow: transparent 0 0 0, transparent 0 0 0;
+  box-shadow: transparent 0 0 0, transparent 0 0 0;
+  border-color: #d4d4d4;
+}
+.csdl-container a.csdl-button.csdl-button-done {
   color: #ffffff;
+  text-shadow: none;
+  background-color: #ff8f1f;
+  background-image: -moz-linear-gradient(top, #ff9933, #ff8000);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ff9933), to(#ff8000));
+  background-image: -webkit-linear-gradient(top, #ff9933, #ff8000);
+  background-image: -o-linear-gradient(top, #ff9933, #ff8000);
+  background-image: linear-gradient(to bottom, #ff9933, #ff8000);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffff9933', endColorstr='#ffff8000', GradientType=0);
+  border: 1px solid #e57300;
+  border-color: #ff8000 #ff8000 #b35900;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
 }
-.csdl-container .csdl-button.done:hover {
-  background: #ff9933;
+.csdl-container a.csdl-button.csdl-button-link {
+  color: #388cb8;
+  text-shadow: 0;
+  font-weight: normal;
+  background: transparent;
+  border: 0;
+  -moz-box-shadow: transparent 0 0 0, transparent 0 0 0;
+  -webkit-box-shadow: transparent 0 0 0, transparent 0 0 0;
+  box-shadow: transparent 0 0 0, transparent 0 0 0;
 }
-.csdl-container .csdl-button.csdl-button-icon {
-  padding-left: 24px;
-  background-image: url('images/csdl-header.png');
+.csdl-container a.csdl-button.csdl-button-link:hover,
+.csdl-container a.csdl-button.csdl-button-link:active {
+  color: #ff9933;
+  border-color: transparent;
+  -moz-box-shadow: transparent 0 0 0, transparent 0 0 0;
+  -webkit-box-shadow: transparent 0 0 0, transparent 0 0 0;
+  box-shadow: transparent 0 0 0, transparent 0 0 0;
+}
+.csdl-container a.csdl-button.csdl-redo {
+  margin-right: 20px;
+}
+.csdl-container a.csdl-button.csdl-listeditor {
+  margin-right: 20px;
+}
+.csdl-container a.csdl-button.csdl-view-open,
+.csdl-container a.csdl-button.csdl-view-close {
+  padding: 2px;
+  width: 30px;
+  height: 30px;
+}
+.csdl-container a.csdl-button.csdl-verify {
+  padding: 2px 8px;
+  float: right;
+  margin-right: 20px;
+}
+.csdl-container a.csdl-button.csdl-save {
+  float: right;
+  padding: 2px 16px;
+  font-size: 12px;
+  font-weight: normal;
+  letter-spacing: 1px;
+  color: #ffffff;
+  text-shadow: 0 1px 1px #b35900;
+  background-color: #ff8f1f;
+  background-image: -moz-linear-gradient(top, #ff9933, #ff8000);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ff9933), to(#ff8000));
+  background-image: -webkit-linear-gradient(top, #ff9933, #ff8000);
+  background-image: -o-linear-gradient(top, #ff9933, #ff8000);
+  background-image: linear-gradient(to bottom, #ff9933, #ff8000);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffff9933', endColorstr='#ffff8000', GradientType=0);
+  border: 1px solid #e57300;
+  border-color: #ff8000 #ff8000 #b35900;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+}
+.csdl-container a.csdl-button .csdl-button-icon {
+  display: inline-block;
+  float: left;
+  width: 24px;
+  height: 24px;
+  background-image: url('images/csdl-header.png?1');
   background-repeat: no-repeat;
   background-size: 20px 260px;
 }
-.csdl-container .csdl-button.csdl-button-icon.csdl-sort-az {
+.csdl-container a.csdl-button.csdl-sort-az .csdl-button-icon {
   background-position: 2px -184px;
 }
-.csdl-container .csdl-button.csdl-button-icon.csdl-copy {
+.csdl-container a.csdl-button.csdl-copy .csdl-button-icon {
   background-position: 2px -210px;
 }
-.csdl-container .csdl-button.csdl-button-icon.csdl-import {
+.csdl-container a.csdl-button.csdl-import .csdl-button-icon {
   background-position: 2px -235px;
+}
+.csdl-container a.csdl-button.csdl-redo .csdl-button-icon {
+  background-position: 2px -27px;
+}
+.csdl-container a.csdl-button.csdl-geoselect .csdl-button-icon {
+  background-position: 2px -53px;
+}
+.csdl-container a.csdl-button.csdl-listeditor .csdl-button-icon {
+  background-position: 2px -158px;
+}
+.csdl-container a.csdl-button.csdl-theme .csdl-button-icon {
+  background-position: 2px -79px;
+}
+.csdl-container a.csdl-button.csdl-view-open .csdl-button-icon {
+  background-position: 3px -105px;
+}
+.csdl-container a.csdl-button.csdl-view-close .csdl-button-icon {
+  background-position: 3px -131px;
 }
 .csdl-container .csdl-icon {
   display: inline-block;
@@ -288,6 +405,9 @@
 }
 .csdl-container .csdl-icon.csdl-edit {
   background-position: 0 -26px;
+}
+.csdl-container .csdl-right {
+  text-align: right;
 }
 .csdl-container .zclip {
   overflow: hidden;
@@ -306,73 +426,9 @@
   -moz-border-radius: 3px 3px 0 0;
   -o-border-radius: 3px 3px 0 0;
   border-radius: 3px 3px 0 0;
-  padding: 10px;
-}
-.csdl-container .csdl-header a {
-  float: left;
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  -o-border-radius: 3px;
-  border-radius: 3px;
-  text-transform: uppercase;
-  font-weight: bold;
-  margin-right: 6px;
-  padding: 3px 8px 2px 24px;
-  border: 1px solid #d4d4d4;
-  background: #ffffff url('images/csdl-header.png') 2px -1px no-repeat;
-  background-size: 20px 260px;
-  font-size: 10px;
-  color: #388cb8;
-}
-.csdl-container .csdl-header a:hover {
-  color: #ff9933;
-  border-color: #bbb;
-}
-.csdl-container .csdl-header a.csdl-inactive {
-  color: #68686d;
-  background-color: none;
-}
-.csdl-container .csdl-header a.csdl-inactive:hover {
-  border-color: #d4d4d4;
-}
-.csdl-container .csdl-header a.csdl-redo {
-  background-position: 2px -27px;
-  margin-right: 20px;
-}
-.csdl-container .csdl-header a.csdl-geoselect {
-  background-position: 2px -53px;
-}
-.csdl-container .csdl-header a.csdl-listeditor {
-  background-position: 2px -158px;
-  margin-right: 20px;
-}
-.csdl-container .csdl-header a.csdl-theme {
-  background-position: 2px -79px;
-}
-.csdl-container .csdl-header a.csdl-view-open {
-  background-position: 2px -105px;
-  padding: 0;
-  width: 26px;
-  height: 26px;
-}
-.csdl-container .csdl-header a.csdl-view-close {
-  background-position: 2px -131px;
-  padding: 0;
-  width: 26px;
-  height: 26px;
-}
-.csdl-container .csdl-header a.csdl-save {
-  float: right;
-  padding: 5px 16px;
-  margin: -3px -4px 0 0;
-  border-color: rgba(0, 0, 0, 0.14);
-  background: #388cb8;
-  font-size: 11px;
-  letter-spacing: 1px;
-  color: #ffffff;
-}
-.csdl-container .csdl-header a.csdl-save:hover {
-  background: #ff9933;
+  height: 40px;
+  padding: 5px;
+  vertical-align: middle;
 }
 .csdl-container .csdl-footer {
   border-top: 1px solid #d4d4d4;
@@ -380,7 +436,8 @@
   -moz-border-radius: 0 0 3px 3px;
   -o-border-radius: 0 0 3px 3px;
   border-radius: 0 0 3px 3px;
-  padding: 12px 14px;
+  padding: 5px;
+  height: 40px;
   color: #68686d;
 }
 .csdl-container .csdl-footer .csdl-help {
@@ -483,6 +540,21 @@ body > .csdl-popup .csdl-popup-content {
 .csdl-container .CodeMirror .CodeMirror-linenumber {
   padding-right: 2px;
 }
+.csdl-container .CodeMirror .csdl-line-error {
+  display: inline-block;
+  position: relative;
+  background: #ff7f82;
+  border: 2px solid #ff6569;
+  color: #000;
+  font-size: 11px;
+  line-height: 1.5;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+  -o-border-radius: 8px;
+  border-radius: 8px;
+  padding: 0 10px;
+  margin: 5px 15px;
+}
 .CodeMirror-hints .CodeMirror-hint-active {
   background: #ff9933;
 }
@@ -490,10 +562,11 @@ body > .csdl-popup .csdl-popup-content {
 .csdl-container .csdl-geo {
   position: absolute;
   z-index: 50;
-  top: 46px;
-  bottom: 46px;
+  top: 40px;
+  bottom: 40px;
   width: 100%;
-  background: #f6f6f5;
+  background: #fff;
+  background: rgba(255, 255, 255, 0.95);
   text-align: center;
 }
 .csdl-container .csdl-geo .csdl-map {
@@ -537,7 +610,7 @@ body > .csdl-popup .csdl-popup-content {
   display: block;
   width: 125px;
   position: absolute;
-  top: 45px;
+  top: 55px;
   left: 50%;
   margin-left: -60px;
   z-index: 100;
@@ -583,13 +656,15 @@ body > .csdl-popup .csdl-popup-content {
 .csdl-container .csdl-list {
   position: absolute;
   z-index: 50;
-  top: 46px;
-  bottom: 46px;
+  top: 40px;
+  bottom: 40px;
   width: 100%;
-  background: #f6f6f5;
+  background: #fff;
+  background: rgba(255, 255, 255, 0.95);
 }
 .csdl-container .csdl-list .csdl-list-bar {
   padding: 5px;
+  background: #f6f6f5;
   border-bottom: 1px solid #d4d4d4;
 }
 .csdl-container .csdl-list .csdl-list-bar .csdl-button.done {
@@ -603,10 +678,8 @@ body > .csdl-popup .csdl-popup-content {
 }
 .csdl-container .csdl-list input.csdl-search {
   display: inline-block;
-  position: relative;
-  top: -1px;
-  height: 26px;
-  width: 150px;
+  height: 30px;
+  width: 200px;
   margin: 0 10px;
   line-height: 18px;
   padding: 4px 6px;
@@ -640,10 +713,17 @@ body > .csdl-popup .csdl-popup-content {
   text-align: right;
   padding: 0;
 }
+.csdl-container .csdl-list .csdl-list-cta {
+  margin: 20px;
+  border: 1px solid #b5e1ec;
+  border-left-width: 3px;
+  padding: 10px;
+  background: #dff6fb;
+}
 .csdl-container .csdl-list .csdl-list-container {
   position: absolute;
   z-index: 50;
-  top: 37px;
+  top: 41px;
   bottom: 0;
   width: 100%;
   overflow: auto;
@@ -662,7 +742,7 @@ body > .csdl-popup .csdl-popup-content {
 .csdl-container .csdl-list .csdl-list-container ol {
   list-style: none;
   display: block;
-  margin: 5px;
+  margin: 15px;
 }
 .csdl-container .csdl-list .csdl-list-container ol li {
   display: inline-block;
@@ -673,15 +753,16 @@ body > .csdl-popup .csdl-popup-content {
 }
 .csdl-container .csdl-list .csdl-list-container ol li .csdl-list-item {
   display: inline-block;
-  background: #ffffff;
+  background: #fbfbfb;
   border: 1px solid #d4d4d4;
   padding: 5px 11px;
   margin: 0 3px;
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  -o-border-radius: 3px;
-  border-radius: 3px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -o-border-radius: 4px;
+  border-radius: 4px;
   overflow: hidden;
+  cursor: pointer;
 }
 .csdl-container .csdl-list .csdl-list-container ol li .csdl-list-item span {
   display: inline-block;
@@ -693,46 +774,62 @@ body > .csdl-popup .csdl-popup-content {
 .csdl-container .csdl-list .csdl-list-container ol li .csdl-list-item input {
   display: none;
 }
-.csdl-container .csdl-list .csdl-list-container ol li .csdl-list-tooltip {
+.csdl-container .csdl-list .csdl-list-container ol li .csdl-list-item .csdl-item-delete {
+  display: inline-block;
   visibility: hidden;
-  display: block;
+  color: #fff;
+  width: 12px;
+  height: 12px;
+  text-align: center;
+  line-height: 9px;
+  background: #ff6569;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  -o-border-radius: 6px;
+  border-radius: 6px;
   position: absolute;
-  top: -28px;
-  height: 26px;
-  width: 52px;
-  left: 50%;
-  margin-left: -26px;
-  background: #000000;
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  -o-border-radius: 3px;
-  border-radius: 3px;
+  top: -5px;
+  right: 2px;
+  font-size: 11px;
+  font-weight: bold;
 }
-.csdl-container .csdl-list .csdl-list-container ol li .csdl-list-tooltip .csdl-list-tooltip-arrow {
-  display: block;
-  position: relative;
+.csdl-container .csdl-list .csdl-list-container ol li .csdl-list-item:hover {
+  background-color: #f5f5f5;
+  background-image: -moz-linear-gradient(top, #ffffff, #e6e6e6);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#e6e6e6));
+  background-image: -webkit-linear-gradient(top, #ffffff, #e6e6e6);
+  background-image: -o-linear-gradient(top, #ffffff, #e6e6e6);
+  background-image: linear-gradient(to bottom, #ffffff, #e6e6e6);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff', endColorstr='#ffe6e6e6', GradientType=0);
+  border: 1px solid #d4d4d4;
+  border-color: #e6e6e6 #e6e6e6 #bfbfbf;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  border-bottom-color: #bbbbbb;
+  -moz-box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05), transparent 0 0 0;
+  -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05), transparent 0 0 0;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05), transparent 0 0 0;
 }
-.csdl-container .csdl-list .csdl-list-container ol li .csdl-list-tooltip .csdl-list-tooltip-arrow:after,
-.csdl-container .csdl-list .csdl-list-container ol li .csdl-list-tooltip .csdl-list-tooltip-arrow:before {
-  top: 100%;
-  border: 5px solid transparent;
-  content: " ";
-  height: 0;
-  width: 0;
-  position: absolute;
-}
-.csdl-container .csdl-list .csdl-list-container ol li .csdl-list-tooltip .csdl-list-tooltip-arrow:after {
-  border-top-color: #000000;
-  left: 50%;
-  margin-left: -5px;
-}
-.csdl-container .csdl-list .csdl-list-container ol li .csdl-list-tooltip .csdl-list-tooltip-arrow:before {
-  border-top-color: #000000;
-  left: 50%;
-  margin-left: -5px;
+.csdl-container .csdl-list .csdl-list-container ol li .csdl-list-item:hover .csdl-item-delete {
+  visibility: visible;
 }
 .csdl-container .csdl-list .csdl-list-container ol li.csdl-list-active .csdl-list-item {
   padding: 3px 5px;
+  background-color: #f5f5f5;
+  background-image: -moz-linear-gradient(top, #ffffff, #e6e6e6);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#e6e6e6));
+  background-image: -webkit-linear-gradient(top, #ffffff, #e6e6e6);
+  background-image: -o-linear-gradient(top, #ffffff, #e6e6e6);
+  background-image: linear-gradient(to bottom, #ffffff, #e6e6e6);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff', endColorstr='#ffe6e6e6', GradientType=0);
+  border: 1px solid #d4d4d4;
+  border-color: #e6e6e6 #e6e6e6 #bfbfbf;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  border-bottom-color: #bbbbbb;
+  -moz-box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05), transparent 0 0 0;
+  -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05), transparent 0 0 0;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05), transparent 0 0 0;
 }
 .csdl-container .csdl-list .csdl-list-container ol li.csdl-list-active .csdl-list-item span {
   display: none;
@@ -741,9 +838,6 @@ body > .csdl-popup .csdl-popup-content {
   display: inline-block;
   padding: 11px 5px;
   max-width: 200px;
-}
-.csdl-container .csdl-list .csdl-list-container ol li:hover .csdl-list-tooltip {
-  visibility: visible;
 }
 .csdl-container .csdl-list .csdl-list-container ol li.csdl-list-add {
   display: inline-block;
@@ -793,25 +887,26 @@ body > .csdl-popup .csdl-popup-content {
 .csdl-container .csdl-list .csdl-import-view {
   position: absolute;
   z-index: 55;
-  top: 38px;
+  top: 70px;
   left: 50%;
-  width: 650px;
-  margin-left: -325px;
+  width: 500px;
+  margin-left: -250px;
   overflow: auto;
-  background: #fbfbfb;
-  padding: 10px;
+  background: #ffffff;
+  padding: 20px;
   border: 1px solid #d4d4d4;
-  border-top: 0;
   -moz-box-shadow: 0 3px 3px rgba(0, 0, 0, 0.05), transparent 0 0 0;
   -webkit-box-shadow: 0 3px 3px rgba(0, 0, 0, 0.05), transparent 0 0 0;
   box-shadow: 0 3px 3px rgba(0, 0, 0, 0.05), transparent 0 0 0;
 }
+.csdl-container .csdl-list .csdl-import-view h4 {
+  margin-bottom: 20px;
+}
+.csdl-container .csdl-list .csdl-import-view label {
+  margin: 5px 0;
+}
 .csdl-container .csdl-list .csdl-import-view .csdl-draganddrop {
   border: 2px dashed #d4d4d4;
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  -o-border-radius: 3px;
-  border-radius: 3px;
   padding: 20px;
   width: 100%;
   margin-bottom: 20px;
@@ -833,12 +928,13 @@ body > .csdl-popup .csdl-popup-content {
   -webkit-box-shadow: 0 0 8px rgba(82, 168, 236, 0.6), transparent 0 0 0;
   box-shadow: 0 0 8px rgba(82, 168, 236, 0.6), transparent 0 0 0;
 }
-.csdl-container .csdl-list .csdl-import-view .csdl-button.done {
-  margin-right: 0;
-}
-.csdl-container .csdl-list .csdl-import-view .csdl-error {
-  color: red;
-  font-weight: bold;
+.csdl-container .csdl-list .csdl-import-view .csdl-import-buttons {
+  border-top: 1px solid #d4d4d4;
+  margin-top: 15px;
+  padding: 15px 20px;
+  margin-left: -20px;
+  margin-right: -20px;
+  margin-bottom: -20px;
 }
 .csdl-container .csdl-list .csdl-import-view textarea {
   display: inline-block;
@@ -861,6 +957,7 @@ body > .csdl-popup .csdl-popup-content {
   -moz-transition: all 0.14s ease-out;
   -o-transition: all 0.14s ease-out;
   transition: all 0.14s ease-out;
+  margin-bottom: 15px;
 }
 .csdl-container .csdl-list .csdl-import-view textarea:focus {
   background: #ffffff;
@@ -878,11 +975,18 @@ body > .csdl-popup .csdl-popup-content {
   background: #ffffff;
 }
 .csdl-container .csdl-list .csdl-import-view table td {
-  padding: 2px;
+  padding: 5px 10px;
 }
 .csdl-container .csdl-list .csdl-import-view table tr.ignored td {
   text-decoration: line-through;
   color: #d4d4d4;
+}
+.csdl-container .csdl-list .csdl-import-view table thead th {
+  background: #f6f6f5;
+  padding: 5px 10px;
+}
+.csdl-container .csdl-list .csdl-import-view table thead.csdl-error th {
+  background: #fdd;
 }
 .csdl-container .csdl-list .csdl-import-view table td,
 .csdl-container .csdl-list .csdl-import-view table th {

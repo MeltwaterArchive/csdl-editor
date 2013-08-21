@@ -12,6 +12,9 @@ CSDLEditor.Loader.addComponent(function($) {
         publicMethods = [
             'save',
             'value',
+            'verify',
+            'error',
+            'clearErrors',
             'showIndicator',
             'hideIndicator',
             'fullscreen',
@@ -94,7 +97,8 @@ CSDLEditor.Loader.addComponent(function($) {
             },
             autosave : function(code) {
                 noop(code);
-            }
+            },
+            verify : false
         }, opt);
 
         /** @type {Object} Config of CSDLEditor, that can be altered via options. */
@@ -119,6 +123,7 @@ CSDLEditor.Loader.addComponent(function($) {
         $maxBtn : null,
         $minBtn : null,
         $geoBtn : null,
+        $verifyBtn : null,
 
         /** @type {jQuery} DOM element of the indicator. */
         $indicator : null,
@@ -128,6 +133,9 @@ CSDLEditor.Loader.addComponent(function($) {
 
         /** @type {CodeMirror} CodeMirror instance used in the editor. */
         codeMirror : null,
+
+        /** @type {CodeMirror.LineWidget} CodeMirror LineWidget that is displayed for compilation errors. */
+        errorWidget : null,
 
         /** @type {string} URL to the assets directory. */
         assetsUrl : '/',
@@ -187,6 +195,7 @@ CSDLEditor.Loader.addComponent(function($) {
             this.$maxBtn = this.$container.find('[data-max]');
             this.$minBtn = this.$container.find('[data-min]');
             this.$helpBtn = this.$container.find('[data-help-more]');
+            this.$verifyBtn = this.$container.find('[data-verify]');
 
             this.assetsUrl = this.guessAssetsUrl();
 
@@ -252,6 +261,11 @@ CSDLEditor.Loader.addComponent(function($) {
                 });
 
             this.originalHeight = this.$container.find('.CodeMirror').height();
+
+            // show the verify button if verification handler specified
+            if (typeof this.options.verify === 'function') {
+                this.$verifyBtn.show();
+            }
 
             /*
              * REGISTER LISTENERS
@@ -353,6 +367,10 @@ CSDLEditor.Loader.addComponent(function($) {
              * Triggers the save event.
              */
             this.$saveBtn.click(function() {
+                if ($(this).is('.csdl-inactive')) {
+                    return false;
+                }
+
                 self.save();
                 return false;
             });
@@ -361,6 +379,10 @@ CSDLEditor.Loader.addComponent(function($) {
              * Undo a change.
              */
             this.$undoBtn.click(function() {
+                if ($(this).is('.csdl-inactive')) {
+                    return false;
+                }
+
                 self.undo();
                 return false;
             });
@@ -369,6 +391,10 @@ CSDLEditor.Loader.addComponent(function($) {
              * Redo an undone change.
              */
             this.$redoBtn.click(function() {
+                if ($(this).is('.csdl-inactive')) {
+                    return false;
+                }
+
                 self.redo();
                 return false;
             });
@@ -410,7 +436,7 @@ CSDLEditor.Loader.addComponent(function($) {
              * Show list editor window if possible.
              */
             this.$listBtn.click(function() {
-                if (self.$listBtn.is('.csdl-inactive')) {
+                if ($(this).is('.csdl-inactive')) {
                     return false;
                 }
 
@@ -452,6 +478,18 @@ CSDLEditor.Loader.addComponent(function($) {
             });
 
             /**
+             * Verify the current code.
+             */
+            this.$verifyBtn.click(function() {
+                if ($(this).is('.csdl-inactive')) {
+                    return false;
+                }
+
+                self.verify();
+                return false;
+            });
+
+            /**
              * Minimize from full screen when pressed escape key.
              */
             Mousetrap.bind('esc', function() {
@@ -468,6 +506,13 @@ CSDLEditor.Loader.addComponent(function($) {
          */
         save : function() {
             this.trigger('save', [this.value()]);
+        },
+
+        /**
+         * Trigger the verify event.
+         */
+        verify : function() {
+            this.trigger('verify', [this.value()]);
         },
 
         /**
@@ -492,6 +537,36 @@ CSDLEditor.Loader.addComponent(function($) {
 
             if (this.undoStackSize <= 0) {
                 this.$redoBtn.addClass('csdl-inactive');
+            }
+        },
+
+        /**
+         * Display a CSDL error in the editor.
+         * 
+         * @param  {Number} line    Line on which the error occurred.
+         * @param  {String} message [optional] Optional message to display next to the error.
+         */
+        error : function(line, message) {
+            message = message || 'An error occurred during compilation of this CSDL on line ' + line;
+
+            this.clearErrors();
+
+            this.errorWidget = this.codeMirror.addLineWidget(line - 1, this.getTemplate('lineError', {
+                message : message
+            }).get(0), {
+                noHScroll : true
+            });
+
+            this.codeMirror.scrollIntoView({line: line - 1, ch: 0}, 50);
+        },
+
+        /**
+         * Clears any visible errors from the editor.
+         */
+        clearErrors : function() {
+            if (this.errorWidget) {
+                this.errorWidget.clear();
+                this.errorWidget = null;
             }
         },
 
@@ -592,6 +667,8 @@ CSDLEditor.Loader.addComponent(function($) {
                 this.hideGeoSelection();
             }
 
+            this.toggleMainButtons(false);
+
             this.$geo = this.getTemplate('geo_' + type)
                 .append(this.getTemplate('geo'))
                 .appendTo(this.$container);
@@ -607,6 +684,7 @@ CSDLEditor.Loader.addComponent(function($) {
         hideGeoSelection : function() {
             this.$geo.remove();
             this.$geo = null;
+            this.toggleMainButtons(true);
         },
 
         /**
@@ -616,6 +694,8 @@ CSDLEditor.Loader.addComponent(function($) {
             if (this.$list && this.$list.length) {
                 this.hideListEditor();
             }
+
+            this.toggleMainButtons(false);
 
             this.$list = this.getTemplate('listEditor')
                 .appendTo(this.$container);
@@ -628,6 +708,32 @@ CSDLEditor.Loader.addComponent(function($) {
         hideListEditor : function() {
             this.$list.remove();
             this.$list = null;
+            this.toggleMainButtons(true);
+        },
+
+        /**
+         * Toggles the main top buttons.
+         * 
+         * @param  {Boolean} enable [optional] Enabled them? Default: true.
+         */
+        toggleMainButtons : function(enable) {
+            enable = enable === undefined ? true : enable;
+
+            this.$undoBtn
+                .add(this.$redoBtn)
+                .add(this.$geoBtn)
+                .add(this.$listBtn)
+                .add(this.$verifyBtn)
+                .add(this.$saveBtn)
+                [enable ? 'removeClass' : 'addClass']('csdl-inactive');
+
+            if (enable) {
+                var cursor = this.codeMirror.getCursor(),
+                    token = this.codeMirror.getTokenAt(cursor);
+
+                this.toggleGeoSelectionForToken(token, cursor);
+                this.toggleListEditorForToken(token, cursor);
+            }
         },
 
         /**

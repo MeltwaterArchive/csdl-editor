@@ -11,10 +11,16 @@
 @blue: #388cb8;
 @orange: #ff9933;
 @black: #000;
-@blackTrans: rgba(0, 0, 0, 0.75);
+@grayDark: #333;
+@btnBackground: #fff;
+@btnBackgroundHighlight: darken(@btnBackground, 10%);
+@btnBorder: @dborder;
+@doneBtnBackground: @orange;
+@doneBtnBackgroundHighlight: darken(@doneBtnBackground, 10%);
+@doneBtnBorder: darken(@orange, 15%);
 
 // assets
-@headerImg: 'images/csdl-header.png';
+@headerImg: 'images/csdl-header.png?1';
 @headerImgWidth: 20px;
 @headerImgHeight: 260px;
 
@@ -23,10 +29,10 @@
 // CSS3 shortcuts
 
 .border-radius(@radius: 5px) {
--webkit-border-radius: @radius;
-   -moz-border-radius: @radius;
-     -o-border-radius: @radius;
-        border-radius: @radius;
+    -webkit-border-radius: @radius;
+    -moz-border-radius: @radius;
+    -o-border-radius: @radius;
+    border-radius: @radius;
 }
 
 .box-shadow(@shadow1, @shadow2: transparent 0 0 0 ) {
@@ -37,9 +43,25 @@
 
 .transition(@transition) {
     -webkit-transition: @transition;
-       -moz-transition: @transition;
-         -o-transition: @transition;
-            transition: @transition;
+    -moz-transition: @transition;
+    -o-transition: @transition;
+    transition: @transition;
+}
+
+.gradient(@startColor: #555, @endColor: #333) {
+    background-color: mix(@startColor, @endColor, 60%);
+    background-image: -moz-linear-gradient(top, @startColor, @endColor); // FF 3.6+
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(@startColor), to(@endColor)); // Safari 4+, Chrome 2+
+    background-image: -webkit-linear-gradient(top, @startColor, @endColor); // Safari 5.1+, Chrome 10+
+    background-image: -o-linear-gradient(top, @startColor, @endColor); // Opera 11.10
+    background-image: linear-gradient(to bottom, @startColor, @endColor); // Standard, IE10
+    background-repeat: repeat-x;
+    filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColorstr='%d', GradientType=0)",argb(@startColor),argb(@endColor))); // IE9 and down
+}
+
+.opacity(@opacity) {
+    opacity: @opacity / 100;
+    filter: ~"alpha(opacity=@{opacity})";
 }
 
 // Reset inside the Code Editor container
@@ -69,7 +91,7 @@
     audio[controls], canvas, video { display: inline-block; *display: inline; *zoom: 1; }
     input[type="checkbox"] {margin:0;}
 
-    h1,h2,h3,h4,h5 {font-size: 1;font-weight:bold;color:@custom;text-align:left;margin:5px 0;}
+    h1,h2,h3,h4,h5 {font-size: 1;font-weight:bold;color:#000;text-align:left;margin:5px 0;}
 
     img { border: 0; -ms-interpolation-mode: bicubic; display: block;}
     img, object, embed { max-width: 100%; height: auto; }
@@ -86,6 +108,7 @@
     .csdl-row .csdl-row { width: auto; max-width: none; min-width: 0; padding: 0; }
 
     .csdl-column { float: left; min-height: 1px; padding: 0 10px; position: relative; }
+    .csdl-column.no-padding {padding: 0;}
     [class*="csdl-column"] + [class*="csdl-column"]:last-child { float: right; }
     [class*="drb-column"] + [class*="csdl-column"].end { float: left; }
 
@@ -178,53 +201,120 @@
         background: url('images/maps-marker.png');
     }
 
-    .csdl-button {
+    a.csdl-button {
         display: inline-block;
-        .border-radius(3px);
-        text-transform: uppercase;
         font-weight: bold;
+        color: @grayDark;
+        font-size: 11px;
+        line-height: 24px;
+        text-shadow: 0 1px 1px rgba(255,255,255,.75);
+        margin: 0 2px;
+        padding: 2px 5px;
+        .gradient(@btnBackground, @btnBackgroundHighlight);
+        border: 1px solid @btnBorder;
+        border-color: @btnBackgroundHighlight @btnBackgroundHighlight darken(@btnBackgroundHighlight, 15%);
+        border-color: rgba(0,0,0,.1) rgba(0,0,0,.1) fadein(rgba(0,0,0,.1), 15%);
+        border-bottom-color: darken(@btnBorder, 10%);
+        .border-radius(4px);
+        vertical-align: middle;
+        cursor: pointer;
 
-        margin: 0 6px;
-        padding: 3px 8px 2px;
-        border: 1px solid @dborder;
-        background-color: @white;
-
-        font-size: 10px;
-        color: @blue;
+        .box-shadow(~"inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05)");
 
         &:hover {
-            color: @orange;
-            border-color: #bbb;
+            color: @grayDark;
+            border-color: darken(@btnBorder, 10%);
         }
 
-        &.done {
-            border-color: rgba(0,0,0,0.14);
-            background: @blue;
-            color: @white;
+        &:active {
+            background-color: darken(@btnBackgroundHighlight, 10%) e("\9");
+            .box-shadow(~"inset 0 2px 4px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05)");
+        }
 
-            &:hover {
-                background: @orange;
+        &.csdl-inactive {
+            cursor: default;
+            .opacity(65);
+            .box-shadow(transparent 0 0 0);
+            border-color: @btnBorder;
+        }
+
+        &.csdl-button-done {
+            color: @white;
+            text-shadow: none;
+            .gradient(@doneBtnBackground, @doneBtnBackgroundHighlight);
+            border: 1px solid @doneBtnBorder;
+            border-color: @doneBtnBackgroundHighlight @doneBtnBackgroundHighlight darken(@doneBtnBackgroundHighlight, 15%);
+            border-color: rgba(0,0,0,.1) rgba(0,0,0,.1) fadein(rgba(0,0,0,.1), 15%);
+        }
+
+        &.csdl-button-link {
+            color: @blue;
+            text-shadow: 0;
+            font-weight: normal;
+            background: transparent;
+            border: 0;
+            .box-shadow(transparent 0 0 0);
+
+            &:hover, &:active {
+                color: @orange;
+                border-color: transparent;
+                .box-shadow(transparent 0 0 0);
             }
         }
 
-        &.csdl-button-icon {
-            padding-left: 24px;
+        &.csdl-redo {
+            margin-right: 20px;
+        }
+
+        &.csdl-listeditor {
+            margin-right: 20px;
+        }
+
+        &.csdl-view-open, &.csdl-view-close {
+            padding: 2px;
+            width: 30px;
+            height: 30px;
+        }
+
+        &.csdl-verify {
+            padding: 2px 8px;
+            float: right;
+            margin-right: 20px;
+        }
+
+        &.csdl-save {
+            float: right;
+            padding: 2px 16px;
+            font-size: 12px;
+            font-weight: normal;
+            letter-spacing: 1px;
+            color: @white;
+            text-shadow: 0 1px 1px darken(@doneBtnBorder, 10%);
+            .gradient(@doneBtnBackground, @doneBtnBackgroundHighlight);
+            border: 1px solid @doneBtnBorder;
+            border-color: @doneBtnBackgroundHighlight @doneBtnBackgroundHighlight darken(@doneBtnBackgroundHighlight, 15%);
+            border-color: rgba(0,0,0,.1) rgba(0,0,0,.1) fadein(rgba(0,0,0,.1), 15%);
+        }
+
+        .csdl-button-icon {
+            display: inline-block;
+            float: left;
+            width: 24px;
+            height: 24px;
             background-image: url(@headerImg);
             background-repeat: no-repeat;
             background-size: @headerImgWidth @headerImgHeight;
-
-            &.csdl-sort-az {
-                background-position: 2px -184px;
-            }
-
-            &.csdl-copy {
-                background-position: 2px -210px;
-            }
-
-            &.csdl-import {
-                background-position: 2px -235px;
-            }
         }
+
+        &.csdl-sort-az .csdl-button-icon {background-position: 2px -184px;}
+        &.csdl-copy .csdl-button-icon {background-position: 2px -210px;}
+        &.csdl-import .csdl-button-icon {background-position: 2px -235px;}
+        &.csdl-redo .csdl-button-icon {background-position: 2px -27px;}
+        &.csdl-geoselect .csdl-button-icon {background-position: 2px -53px;}
+        &.csdl-listeditor .csdl-button-icon {background-position: 2px -158px;}
+        &.csdl-theme .csdl-button-icon {background-position: 2px -79px;}
+        &.csdl-view-open .csdl-button-icon {background-position: 3px -105px;}
+        &.csdl-view-close .csdl-button-icon {background-position: 3px -131px;}
     }
 
     .csdl-icon {
@@ -241,6 +331,10 @@
         &.csdl-edit {
             background-position: 0 -26px;
         }
+    }
+
+    .csdl-right {
+        text-align: right;
     }
 
     // zclip fix
@@ -264,92 +358,16 @@
 .csdl-container .csdl-header {
     border-bottom: 1px solid @dborder;
     .border-radius(3px 3px 0 0);
-    padding: 10px;
-
-    a {
-        float: left;
-        .border-radius(3px);
-        text-transform: uppercase;
-        font-weight: bold;
-
-        margin-right: 6px;
-        padding: 3px 8px 2px 24px;
-        border: 1px solid @dborder;
-        background: @white url(@headerImg) 2px -1px no-repeat;
-        background-size: @headerImgWidth @headerImgHeight;
-
-        font-size: 10px;
-        color: @blue;
-
-        &:hover {
-            color: @orange;
-            border-color: #bbb;
-        }
-
-        &.csdl-inactive {
-            color: @custom;
-            background-color: none;
-
-            &:hover {
-                border-color: @dborder;
-            }
-
-        }
-
-        &.csdl-redo {
-            background-position: 2px -27px;
-            margin-right: 20px;
-        }
-
-        &.csdl-geoselect {
-            background-position: 2px -53px;
-        }
-
-        &.csdl-listeditor {
-            background-position: 2px -158px;
-            margin-right: 20px;
-        }
-
-        &.csdl-theme {
-            background-position: 2px -79px;
-        }
-
-        &.csdl-view-open {
-            background-position: 2px -105px;
-            padding: 0;
-            width: 26px;
-            height: 26px;
-        }
-
-        &.csdl-view-close {
-            background-position: 2px -131px;
-            padding: 0;
-            width: 26px;
-            height: 26px;
-        }
-
-        &.csdl-save {
-            float: right;
-            padding: 5px 16px;
-            margin: -3px -4px 0 0;
-            border-color: rgba(0,0,0,0.14);
-            background: @blue;
-            
-            font-size: 11px;
-            letter-spacing: 1px;
-            color: @white;
-
-            &:hover {
-                background: @orange;
-            }
-        }
-    }
+    height: 40px;
+    padding: 5px;
+    vertical-align: middle;
 }
 
 .csdl-container .csdl-footer {
     border-top: 1px solid @dborder;
     .border-radius(0 0 3px 3px);
-    padding: 12px 14px;
+    padding: 5px;
+    height: 40px;
     color: @custom;
 
     .csdl-help {
@@ -467,6 +485,19 @@ body > .csdl-popup {
     .CodeMirror-linenumber {
         padding-right: 2px;
     }
+
+    .csdl-line-error {
+        display: inline-block;
+        position: relative;
+        background: #ff7f82;
+        border: 2px solid #ff6569;
+        color: #000;
+        font-size: 11px;
+        line-height: 1.5;
+        .border-radius(8px);
+        padding: 0 10px;
+        margin: 5px 15px;
+    }
 }
 
 .CodeMirror-hints {
@@ -481,10 +512,11 @@ body > .csdl-popup {
 .csdl-container .csdl-geo {
     position: absolute;
     z-index: 50;
-    top: 46px;
-    bottom: 46px;
+    top: 40px;
+    bottom: 40px;
     width: 100%;
-    background: @border;
+    background: #fff;
+    background: rgba(255, 255, 255, .95);
     text-align: center;
 
     .csdl-map {
@@ -528,7 +560,7 @@ body > .csdl-popup {
             display: block;
             width: 125px;
             position: absolute;
-            top: 45px;
+            top: 55px;
             left: 50%;
             margin-left: -60px;
             z-index: 100;
@@ -583,13 +615,15 @@ body > .csdl-popup {
 .csdl-container .csdl-list {
     position: absolute;
     z-index: 50;
-    top: 46px;
-    bottom: 46px;
+    top: 40px;
+    bottom: 40px;
     width: 100%;
-    background: @border;
+    background: #fff;
+    background: rgba(255, 255, 255, .95);
 
     .csdl-list-bar {
         padding: 5px;
+        background: @border;
         border-bottom: 1px solid @dborder;
 
         .csdl-button.done {
@@ -606,10 +640,8 @@ body > .csdl-popup {
 
     input.csdl-search {
         display: inline-block;
-        position: relative;
-        top: -1px;
-        height: 26px;
-        width: 150px;
+        height: 30px;
+        width: 200px;
         margin: 0 10px;
         line-height: 18px;
         padding: 4px 6px;
@@ -637,10 +669,18 @@ body > .csdl-popup {
         padding: 0;
     }
 
+    .csdl-list-cta {
+        margin: 20px;
+        border: 1px solid #b5e1ec;
+        border-left-width: 3px;
+        padding: 10px;
+        background: #dff6fb;
+    }
+
     .csdl-list-container {
         position: absolute;
         z-index: 50;
-        top: 37px;
+        top: 41px;
         bottom: 0;
         width: 100%;
         overflow: auto;
@@ -662,7 +702,7 @@ body > .csdl-popup {
         ol {
             list-style: none;
             display: block;
-            margin: 5px;
+            margin: 15px;
 
             li {
                 display: inline-block;
@@ -673,12 +713,13 @@ body > .csdl-popup {
 
                 .csdl-list-item {
                     display: inline-block;
-                    background: @white;
+                    background: @bg;
                     border: 1px solid @dborder;
                     padding: 5px 11px;
                     margin: 0 3px;
-                    .border-radius(3px);
+                    .border-radius(4px);
                     overflow: hidden;
+                    cursor: pointer;
 
                     span {
                         display: inline-block;
@@ -691,43 +732,34 @@ body > .csdl-popup {
                     input {
                         display: none;
                     }
-                }
 
-                .csdl-list-tooltip {
-                    visibility: hidden;
-                    display: block;
-                    position: absolute;
-                    top: -28px;
-                    height: 26px;
-                    width: 52px;
-                    left: 50%;
-                    margin-left: -26px;
-                    background: @black;
-                    .border-radius(3px);
+                    .csdl-item-delete {
+                        display: inline-block;
+                        visibility: hidden;
+                        color: #fff;
+                        width: 12px;
+                        height: 12px;
+                        text-align: center;
+                        line-height: 9px;
+                        background: #ff6569;
+                        .border-radius(6px);
+                        position: absolute;
+                        top: -5px;
+                        right: 2px;
+                        font-size: 11px;
+                        font-weight: bold;
+                    }
 
-                    .csdl-list-tooltip-arrow {
-                        display: block;
-                        position: relative;
+                    &:hover {
+                        .gradient(@btnBackground, @btnBackgroundHighlight);
+                        border: 1px solid @btnBorder;
+                        border-color: @btnBackgroundHighlight @btnBackgroundHighlight darken(@btnBackgroundHighlight, 15%);
+                        border-color: rgba(0,0,0,.1) rgba(0,0,0,.1) fadein(rgba(0,0,0,.1), 15%);
+                        border-bottom-color: darken(@btnBorder, 10%);
+                        .box-shadow(~"inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05)");
 
-                        &:after, &:before {
-                            top: 100%;
-                            border: 5px solid transparent;
-                            content: " ";
-                            height: 0;
-                            width: 0;
-                            position: absolute;
-                        }
-
-                        &:after {
-                            border-top-color: @black;
-                            left: 50%;
-                            margin-left: -5px;
-                        }
-
-                        &:before {
-                            border-top-color: @black;
-                            left: 50%;
-                            margin-left: -5px;
+                        .csdl-item-delete {
+                            visibility: visible;
                         }
                     }
                 }
@@ -735,6 +767,12 @@ body > .csdl-popup {
                 &.csdl-list-active {
                     .csdl-list-item {
                         padding: 3px 5px;
+                        .gradient(@btnBackground, @btnBackgroundHighlight);
+                        border: 1px solid @btnBorder;
+                        border-color: @btnBackgroundHighlight @btnBackgroundHighlight darken(@btnBackgroundHighlight, 15%);
+                        border-color: rgba(0,0,0,.1) rgba(0,0,0,.1) fadein(rgba(0,0,0,.1), 15%);
+                        border-bottom-color: darken(@btnBorder, 10%);
+                        .box-shadow(~"inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05)");
 
                         span {
                             display: none;
@@ -746,10 +784,6 @@ body > .csdl-popup {
                             max-width: 200px;
                         }
                     }
-                }
-
-                &:hover .csdl-list-tooltip {
-                    visibility: visible;
                 }
             }
 
@@ -798,21 +832,26 @@ body > .csdl-popup {
     .csdl-import-view {
         position: absolute;
         z-index: 55;
-        top: 38px;
-        //bottom: 30%;
+        top: 70px;
         left: 50%;
-        width: 650px;
-        margin-left: -325px;
+        width: 500px;
+        margin-left: -250px;
         overflow: auto;
-        background: @bg;
-        padding: 10px;
+        background: @white;
+        padding: 20px;
         border: 1px solid @dborder;
-        border-top: 0;
         .box-shadow(0 3px 3px rgba(0, 0, 0, 0.05));
+
+        h4 {
+            margin-bottom: 20px;
+        }
+
+        label {
+            margin: 5px 0;
+        }
 
         .csdl-draganddrop {
             border: 2px dashed @dborder;
-            .border-radius(3px);
             padding: 20px;
             width: 100%;
             margin-bottom: 20px;
@@ -832,13 +871,13 @@ body > .csdl-popup {
             }
         }
 
-        .csdl-button.done {
-            margin-right: 0;
-        }
-
-        .csdl-error {
-            color: red;
-            font-weight: bold;
+        .csdl-import-buttons {
+            border-top: 1px solid @dborder;
+            margin-top: 15px;
+            padding: 15px 20px;
+            margin-left: -20px;
+            margin-right: -20px;
+            margin-bottom: -20px;
         }
 
         textarea {
@@ -854,6 +893,7 @@ body > .csdl-popup {
             .border-radius(0);
             .box-shadow(inset 0 1px 1px rgba(0, 0, 0, 0));
             .transition(all 0.14s ease-out);
+            margin-bottom: 15px;
 
             &:focus {
                 background: @white;
@@ -871,13 +911,24 @@ body > .csdl-popup {
             background: @white;
 
             td {
-                padding: 2px;
+                padding: 5px 10px;
             }
 
             tr.ignored {
                 td {
                     text-decoration: line-through;
                     color: @dborder;
+                }
+            }
+
+            thead {
+                th {
+                    background: @border;
+                    padding: 5px 10px;
+                }
+
+                &.csdl-error th {
+                    background: #fdd;
                 }
             }
 
