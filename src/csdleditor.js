@@ -15,8 +15,6 @@ CSDLEditor.Loader.addComponent(function($) {
             'verify',
             'error',
             'clearErrors',
-            'showIndicator',
-            'hideIndicator',
             'fullscreen',
             'maximize',
             'minimize',
@@ -134,8 +132,8 @@ CSDLEditor.Loader.addComponent(function($) {
         /** @type {CodeMirror} CodeMirror instance used in the editor. */
         codeMirror : null,
 
-        /** @type {CodeMirror.LineWidget} CodeMirror LineWidget that is displayed for compilation errors. */
-        errorWidget : null,
+        /** @type {Number} Line number where an error has been found. */
+        errorLine : null,
 
         /** @type {string} URL to the assets directory. */
         assetsUrl : '/',
@@ -183,7 +181,7 @@ CSDLEditor.Loader.addComponent(function($) {
             this.$topBar = this.$container.find('[data-bar-top]');
             this.$bottomBar = this.$container.find('[data-bar-bottom]');
 
-            this.$help = this.$container.find('[data-help]');
+            this.$info = this.$container.find('[data-info]');
 
             this.$saveBtn = this.$container.find('[data-save]');
             this.$undoBtn = this.$container.find('[data-undo]');
@@ -194,7 +192,6 @@ CSDLEditor.Loader.addComponent(function($) {
             this.$lightBtn = this.$container.find('[data-theme-light]');
             this.$maxBtn = this.$container.find('[data-max]');
             this.$minBtn = this.$container.find('[data-min]');
-            this.$helpBtn = this.$container.find('[data-help-more]');
             this.$verifyBtn = this.$container.find('[data-verify]');
 
             this.assetsUrl = this.guessAssetsUrl();
@@ -306,13 +303,6 @@ CSDLEditor.Loader.addComponent(function($) {
 
                 self.toggleGeoSelectionForToken(token, cursor);
                 self.toggleListEditorForToken(token, cursor);
-
-                if (token.type === 'target') {
-                    self.showTargetHelp(token.string);
-                } else {
-                    self.hideHelp();
-                }
-
             });
 
             /**
@@ -450,14 +440,6 @@ CSDLEditor.Loader.addComponent(function($) {
             });
 
             /**
-             * Show help popup when there's what to show.
-             */
-            this.$helpBtn.click(function() {
-                self.showHelpPopup(self.$help.data('title'));
-                return false;
-            });
-
-            /**
              * Switch to light theme.
              */
             this.$lightBtn.click(function() {
@@ -551,49 +533,26 @@ CSDLEditor.Loader.addComponent(function($) {
 
             this.clearErrors();
 
-            this.errorWidget = this.codeMirror.addLineWidget(line - 1, this.getTemplate('lineError', {
-                message : message
-            }).get(0), {
-                noHScroll : true
-            });
+            this.errorLine = line - 1;
+            this.$info.addClass('csdl-error').html(message);
 
-            this.codeMirror.scrollIntoView({line: line - 1, ch: 0}, 50);
+            this.codeMirror.addLineClass(this.errorLine, 'background', 'csdl-error');
+
+            this.codeMirror.scrollIntoView({
+                line: this.errorLine,
+                ch: 0
+            }, 50);
         },
 
         /**
          * Clears any visible errors from the editor.
          */
         clearErrors : function() {
-            if (this.errorWidget) {
-                this.errorWidget.clear();
-                this.errorWidget = null;
+            if (this.errorLine !== null && this.errorLine !== undefined) {
+                this.codeMirror.removeLineClass(this.errorLine, 'background', 'csdl-error');
             }
-        },
-
-        /**
-         * Shows the indicator at the bottom of the editor.
-         * 
-         * @return {jQuery}
-         */
-        showIndicator : function() {
-            // check if not already showing
-            if (this.$indicator) {
-                return;
-            }
-
-            this.$indicator = this.getTemplate('indicator').prependTo(this.$bottomBar);
-        },
-
-        /**
-         * Hides the current indicator.
-         * 
-         * @return {jQuery}
-         */
-        hideIndicator : function() {
-            if (this.$indicator) {
-                this.$indicator.remove();
-                this.$indicator = null;
-            }
+            this.errorLine = null;
+            this.$info.removeClass('csdl-error').html('');
         },
 
         /**
@@ -734,51 +693,6 @@ CSDLEditor.Loader.addComponent(function($) {
                 this.toggleGeoSelectionForToken(token, cursor);
                 this.toggleListEditorForToken(token, cursor);
             }
-        },
-
-        /**
-         * Shows target help in the help section.
-         * 
-         * @param  {String} target Target name.
-         */
-        showTargetHelp : function(target) {
-            var self = this;
-
-            this.showIndicator();
-
-            this.getTargetHelp(target, function(content) {
-                self.hideIndicator();
-                self.showHelp(content, target);
-            });
-        },
-
-        /**
-         * Shows help in the help section.
-         * 
-         * @param  {String} content Content of the popup.
-         * @param  {String} title [optional] Title of the popup.
-         */
-        showHelp : function(content, title) {
-            content = $.trim(content);
-            title = title === undefined ? '' : $.trim(title);
-
-            var $content = $('<div>' + content + '</div>');
-
-            this.$help.fadeIn('fast')
-                .data('full', content)
-                .data('title', title)
-                .find('[data-help-content]')
-                    .html($content.find('p:first').html());
-        },
-
-        /**
-         * Empties the help section.
-         */
-        hideHelp : function() {
-            this.$help.hide()
-                .data('full', '')
-                .data('title', '')
-                .find('[data-help-content]').html('');
         },
 
         /**

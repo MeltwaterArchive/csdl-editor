@@ -119,8 +119,6 @@
             candidates = candidates.concat(punctuationControl);
         }
 
-        console.log(candidates);
-
         // and now filter the candidates
         for (i = 0; i < candidates.length; i++) {
             // if a substr of the candidate matches the string then autocomplete

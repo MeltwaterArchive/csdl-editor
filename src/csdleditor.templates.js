@@ -20,15 +20,7 @@ CSDLEditor.Loader.addComponent(function() {
                 '</div>',
                 '<div class="csdl-editor-container" data-editor-container />',
                 '<div class="csdl-footer csdl-row" data-bar-bottom>',
-                    '<div class="csdl-column eight csdl-left">',
-                        '<div class="csdl-help" style="display: none;" data-help>',
-                            '<span data-help-content />',
-                            '<a href="#" data-help-more>More</a>',
-                        '</div>',
-                        '<div class="csdl-error" style="display: none;" data-error>',
-                            '<span data-error-message />',
-                        '</div>',
-                    '</div>',
+                    '<div class="csdl-column eight csdl-left csdl-info" data-info />',
                     '<div class="csdl-column four csdl-right no-padding">',
                         '<a href="#" data-max class="csdl-button csdl-view-open"><i class="csdl-button-icon" /></a>',
                         '<a href="#" data-min class="csdl-button csdl-view-close" style="display: none;"><i class="csdl-button-icon" /></a>',
@@ -37,10 +29,6 @@ CSDLEditor.Loader.addComponent(function() {
                     '</div>',
                 '</div>',
             '</div>'
-        ].join(''),
-
-        lineError : [
-            '<div class="csdl-line-error">{message}</div>'
         ].join(''),
 
         indicator : '<div class="indicator"></div>',
