@@ -472,6 +472,17 @@ CSDLEditor.Loader.addComponent(function($) {
             });
 
             /**
+             * Show target help popup when right-clicked on a target token inside CodeMirror.
+             *
+             * And prevent displaying normal context menu.
+             */
+            this.$container.on('contextmenu', '.CodeMirror-lines .cm-target', function(ev) {
+                ev.preventDefault();
+                self.showHelpPopup(this.innerHTML);
+                return false;
+            });
+
+            /**
              * Minimize from full screen when pressed escape key.
              */
             Mousetrap.bind('esc', function() {
