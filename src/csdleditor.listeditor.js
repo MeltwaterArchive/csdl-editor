@@ -36,12 +36,14 @@ CSDLEditor.Loader.addComponent(function($) {
         /* setup links to important elements */
         this.$copyBtn = this.$view.find('a[data-copy]').attr('id', 'csdl-copy-to-clipboard-' + Math.floor(Math.random() * 10000));
         this.$importBtn = this.$view.find('a[data-import]');
+        this.$modeBtns = this.$view.find('a[data-list-mode]');
         this.$searchInput = this.$view.find('input[name="search"]');
         this.$counter = this.$view.find('[data-counter]');
 
         /* make the list sortable */
         this.$list.sortable({
-            containment: 'parent',
+            disabled : true, // disabled until switched to move mode
+            containment : 'parent',
             cursor : 'move',
             handle : '[data-handle]',
             helper : function(ev, $el) {
@@ -76,7 +78,7 @@ CSDLEditor.Loader.addComponent(function($) {
         });
 
         /**
-         * When clicked on a list item then make it editable and focus in the input.
+         * When clicked on a list item then perform action appropriate to the current editing mode.
          */
         this.$list.on('click', 'li:not([data-add-item])', function() {
             var $el = $(this),
@@ -84,8 +86,20 @@ CSDLEditor.Loader.addComponent(function($) {
 
             self.$list.find('li.csdl-list-active').removeClass('csdl-list-active');
 
-            $el.addClass('csdl-list-active')
-                .find('input').width(spanWidth).focus();
+            // enable edit when in edit mode
+            if (self.mode === self.EDIT_MODE) {
+                $el.addClass('csdl-list-active')
+                    .find('input').width(spanWidth).focus();
+
+            // delete when in delete mode
+            } else if (self.mode === self.DELETE_MODE) {
+                $el.fadeOut(200, function() {
+                    $el.remove();
+                    self.updateCounter();
+                });
+            }
+
+            return false;
         });
 
         /**
@@ -142,26 +156,6 @@ CSDLEditor.Loader.addComponent(function($) {
             }
 
             return ret;
-        });
-
-        /**
-         * When clicked on the edit trigger then trigger click on the list item and therefore focus in the edit field.
-         */
-        this.$list.on('click', '[data-edit]', function() {
-            $(this).closest('li').click();
-            return false;
-        });
-
-        /**
-         * Delete list items when clicked on delete trigger.
-         */
-        this.$list.on('click', '[data-delete]', function() {
-            var $li = $(this).closest('li');
-            $li.fadeOut(200, function() {
-                $li.remove();
-                self.updateCounter();
-            });
-            return false;
         });
 
         /**
@@ -233,6 +227,14 @@ CSDLEditor.Loader.addComponent(function($) {
                 }
             });
         });
+
+        /**
+         * Set list editing mode when clicked on one of the mode buttons.
+         */
+        this.$modeBtns.click(function(ev) {
+            self.setMode($(this).data('listMode'));
+            return false;
+        });
     };
 
     CSDLEditor.ListEditor.prototype = {
@@ -240,6 +242,14 @@ CSDLEditor.Loader.addComponent(function($) {
         importing : false,
         /** @var {jQuery} View of the current import process. */
         $importView : null,
+
+        /** @var {String} Current list mode. */
+        mode : 'edit',
+
+        /** @var {String} Available list modes. */
+        EDIT_MODE : 'edit',
+        MOVE_MODE : 'move',
+        DELETE_MODE : 'delete',
 
         /**
          * Adds an item to the list.
@@ -358,6 +368,35 @@ CSDLEditor.Loader.addComponent(function($) {
             }
 
             return count;
+        },
+
+        /* ##########################
+         * LIST EDITING MODES
+         * ########################## */
+        /**
+         * Sets current editing mode.
+         * 
+         * @param {String} mode Mode to enable.
+         */
+        setMode : function(mode) {
+            if ($.inArray(mode, [this.EDIT_MODE, this.DELETE_MODE, this.MOVE_MODE]) === -1) {
+                throw new Error('Unrecognized mode "' + mode + '".');
+            }
+
+            this.$modeBtns.removeClass('csdl-active')
+                .filter('[data-list-mode="' + mode + '"]').addClass('csdl-active');
+
+            this.$list.removeClass('csdl-mode-edit csdl-mode-move csdl-mode-delete')
+                .addClass('csdl-mode-' + mode);
+
+            // display appropriate info box
+            this.$view.find('[data-mode-info]').hide();
+            this.$view.find('[data-mode-info="' + mode + '"]').show();
+
+            // turn sortable on and off
+            this.$list.sortable(mode === this.MOVE_MODE ? 'enable' : 'disable');
+
+            this.mode = mode;
         },
 
         /* ##########################
