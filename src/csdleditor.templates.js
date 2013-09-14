@@ -128,13 +128,10 @@ CSDLEditor.Loader.addComponent(function() {
         ].join(''),
 
         listElement : [
-            '<li>',
-                '<div class="csdl-list-item" data-handle data-item>',
-                    '<div class="csdl-list-item-mode-bar" />',
-                    '<span>{value}</span>',
-                    '<input type="text" placeholder="Enter a value..." value="{value}">',
-                '</div>',
-                ',',
+            '<li class="csdl-list-item" data-handle data-item data-value="{value}">',
+                '<div class="csdl-list-item-mode-bar" />',
+                '<span class="csdl-list-item-label">{value}</span>',
+                '<input class="csdl-list-item-input" type="text" placeholder="Enter a value..." value="{value}">',
             '</li>'
         ].join(''),
 
@@ -153,6 +150,8 @@ CSDLEditor.Loader.addComponent(function() {
                 '</div>',
             '</div>'
         ].join(''),
+
+        listEditor_import_error : '<div class="csdl-import-error" data-csv-error>{error}</div>',
 
         listEditor_import_file : [
             '<h4>Import a CSV file</h4>',

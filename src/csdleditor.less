@@ -606,7 +606,7 @@ body > .csdl-popup {
         z-index: 51;
     }
 
-    input.csdl-search {
+    .csdl-search {
         display: inline-block;
         height: 30px;
         width: 200px;
@@ -666,149 +666,149 @@ body > .csdl-popup {
         p {
             margin: 20px 10px;
         }
+    }
 
-        ol {
-            list-style: none;
+    .csdl-list-elements {
+        list-style: none;
+        display: block;
+        margin: 15px;
+    }
+
+    .csdl-list-item {
+        display: block;
+        position: relative;
+        margin: 6px 3px;
+        float: left;
+        background: @bg;
+        border: 1px solid @dborder;
+        padding: 5px 11px;
+        .border-radius(4px);
+        overflow: hidden;
+
+        &:hover {
+            .gradient(@btnBackground, @btnBackgroundHighlight);
+            border: 1px solid @btnBorder;
+            border-color: @btnBackgroundHighlight @btnBackgroundHighlight darken(@btnBackgroundHighlight, 15%);
+            border-color: rgba(0,0,0,.1) rgba(0,0,0,.1) fadein(rgba(0,0,0,.1), 15%);
+            border-bottom-color: darken(@btnBorder, 10%);
+            .box-shadow(~"inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05)");
+        }
+
+        &.csdl-list-active {
+            padding: 3px 5px;
+            .gradient(@btnBackground, @btnBackgroundHighlight);
+            border: 1px solid @btnBorder;
+            border-color: @btnBackgroundHighlight @btnBackgroundHighlight darken(@btnBackgroundHighlight, 15%);
+            border-color: rgba(0,0,0,.1) rgba(0,0,0,.1) fadein(rgba(0,0,0,.1), 15%);
+            border-bottom-color: darken(@btnBorder, 10%);
+            .box-shadow(~"inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05)");
+
+            .csdl-list-item-label {
+                display: none;
+            }
+
+            .csdl-list-item-input {
+                display: inline-block;
+                padding: 11px 5px;
+                max-width: 200px;
+            }
+        }
+    }
+
+    .csdl-list-item-label {
+        display: inline-block;
+        max-width: 150px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .csdl-list-item-input {
+        display: none;
+    }
+
+    .csdl-list-item-mode-bar {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: transparent;
+    }
+
+    .csdl-list-add {
+        display: block;
+        float: left;
+        margin: 6px;
+        margin-right: 9px;
+        padding-right: 15px;
+        border-right: 1px solid @dborder;
+        width: 200px;
+    }
+
+    .sortable-placeholder {
+        display: block;
+        position: relative;
+        margin: 6px 3px;
+        float: left;
+        width: 100px;
+        height: 32px;
+        border: 1px dashed @dborder;
+        .border-radius(3px);
+    }
+
+    input {
+        display: inline-block;
+        margin: 0;
+        line-height: 18px;
+        padding: 4px 6px;
+        font-size: 13px;
+        color: @main;
+        background: white;
+        border: 1px solid @dborder;
+        vertical-align: middle;
+        .border-radius(3px);
+        .box-shadow(inset 0 1px 1px rgba(0, 0, 0, 0));
+        cursor: pointer;
+
+        &.csdl-list-add-input {
+            height: 32px;
+            width: 100%;
+        }
+
+        &:focus {
+            .box-shadow(inset 0 1px 1px rgba(0, 0, 0, 0.075));
+        }
+    }
+
+    .csdl-mode-edit .csdl-list-item {
+        cursor: text;
+
+        .csdl-list-item-mode-bar {
+            display: none;
+        }
+    }
+
+    .csdl-mode-delete {
+        .csdl-list-item {
+            cursor: pointer;
+        }
+
+        .csdl-list-item-mode-bar {
             display: block;
-            margin: 15px;
+            background: red;
+        }
+    }
 
-            li {
-                display: inline-block;
-                position: relative;
-                margin: 6px 3px;
-                margin-right: 0;
-                float: left;
+    .csdl-mode-move {
+        .csdl-list-item {
+            cursor: move;
+        }
 
-                .csdl-list-item {
-                    display: inline-block;
-                    background: @bg;
-                    border: 1px solid @dborder;
-                    padding: 5px 11px;
-                    margin: 0 3px;
-                    .border-radius(4px);
-                    overflow: hidden;
-                    position: relative;
-
-                    span {
-                        display: inline-block;
-                        max-width: 150px;
-                        overflow: hidden;
-                        text-overflow: ellipsis;
-                        white-space: nowrap;
-                    }
-
-                    input {
-                        display: none;
-                    }
-
-                    .csdl-list-item-mode-bar {
-                        display: none;
-                        position: absolute;
-                        top: 0;
-                        left: 0;
-                        width: 100%;
-                        height: 3px;
-                        background: transparent;
-                    }
-
-                    &:hover {
-                        .gradient(@btnBackground, @btnBackgroundHighlight);
-                        border: 1px solid @btnBorder;
-                        border-color: @btnBackgroundHighlight @btnBackgroundHighlight darken(@btnBackgroundHighlight, 15%);
-                        border-color: rgba(0,0,0,.1) rgba(0,0,0,.1) fadein(rgba(0,0,0,.1), 15%);
-                        border-bottom-color: darken(@btnBorder, 10%);
-                        .box-shadow(~"inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05)");
-                    }
-                }
-
-                &.csdl-list-active {
-                    .csdl-list-item {
-                        padding: 3px 5px;
-                        .gradient(@btnBackground, @btnBackgroundHighlight);
-                        border: 1px solid @btnBorder;
-                        border-color: @btnBackgroundHighlight @btnBackgroundHighlight darken(@btnBackgroundHighlight, 15%);
-                        border-color: rgba(0,0,0,.1) rgba(0,0,0,.1) fadein(rgba(0,0,0,.1), 15%);
-                        border-bottom-color: darken(@btnBorder, 10%);
-                        .box-shadow(~"inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05)");
-
-                        span {
-                            display: none;
-                        }
-
-                        input {
-                            display: inline-block;
-                            padding: 11px 5px;
-                            max-width: 200px;
-                        }
-                    }
-                }
-            }
-
-            li.csdl-list-add {
-                display: inline-block;
-                margin: 6px;
-                margin-right: 9px;
-                padding-right: 15px;
-                border-right: 1px solid @dborder;
-                width: 200px;
-            }
-
-            li.csdl-list-placeholder {
-                width: 100px;
-                height: 32px;
-                border: 1px dashed @dborder;
-                .border-radius(3px);
-            }
-
-            input {
-                display: inline-block;
-                margin: 0;
-                line-height: 18px;
-                padding: 4px 6px;
-                font-size: 13px;
-                color: @main;
-                background: white;
-                border: 1px solid @dborder;
-                vertical-align: middle;
-                .border-radius(3px);
-                .box-shadow(inset 0 1px 1px rgba(0, 0, 0, 0));
-                cursor: pointer;
-
-                &.csdl-list-add-input {
-                    height: 32px;
-                    width: 100%;
-                }
-
-                &:focus {
-                    .box-shadow(inset 0 1px 1px rgba(0, 0, 0, 0.075));
-                }
-            }
-
-            &.csdl-mode-edit li .csdl-list-item {
-                cursor: text;
-
-                .csdl-list-item-mode-bar {
-                    display: none;
-                }
-            }
-
-            &.csdl-mode-delete li .csdl-list-item {
-                cursor: pointer;
-
-                .csdl-list-item-mode-bar {
-                    display: block;
-                    background: red;
-                }
-            }
-
-            &.csdl-mode-move li .csdl-list-item {
-                cursor: move;
-
-                .csdl-list-item-mode-bar {
-                    display: block;
-                    background: @blue;
-                }
-            }
+        .csdl-list-item-mode-bar {
+            display: block;
+            background: @blue;
         }
     }
 
@@ -882,6 +882,11 @@ body > .csdl-popup {
                 background: @white;
                 .box-shadow(inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6));
             }
+        }
+
+        .csdl-import-error {
+            color: red;
+            text-align: center;
         }
 
         .csdl-table-container {

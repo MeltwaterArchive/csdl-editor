@@ -987,6 +987,14 @@ $.widget("ui.mouse", {
 })(jQuery);
 (function( $, undefined ) {
 
+    // don't register jQuery UI Sortable if HTML 5
+    // as we're gonna use HTML5 sortable as it's faster
+    // @DataSift Code Editor
+    var div = document.createElement('div');
+    if ('draggable' in div || ('ondragstart' in div && 'ondrop' in div)) {
+        return;
+    }
+
 /*jshint loopfunc: true */
 
 function isOverAxis( x, reference, size ) {

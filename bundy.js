@@ -17,6 +17,7 @@ bundy.js([
     "src/lib/jquery.csv.js",
     "src/lib/jquery.simulate.js",
     "src/lib/jquery.ui.js",
+    "src/lib/jquery.sortable.js",
     "src/lib/jquery.zclip.js",
     "src/lib/mousetrap.js",
     "src/csdleditor.codemirror.mode.csdl.js",

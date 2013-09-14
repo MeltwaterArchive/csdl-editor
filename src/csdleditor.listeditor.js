@@ -42,17 +42,13 @@ CSDLEditor.Loader.addComponent(function($) {
 
         /* make the list sortable */
         this.$list.sortable({
-            disabled : true, // disabled until switched to move mode
-            containment : 'parent',
             cursor : 'move',
-            handle : '[data-handle]',
-            helper : function(ev, $el) {
-                return $('<li />').html($el.find('[data-item]').clone());
-            },
-            placeholder : 'csdl-list-placeholder',
-            tolerance : 'pointer',
-            items : '> li:not([data-add-item])'
+            items : ':not(.csdl-list-add)'
         });
+        // disabled until switched to move mode (timeout for a workaround)
+        setTimeout(function() {
+            self.$list.sortable('disable');
+        }, 100);
 
         /*
          * REGISTER LISTENERS
@@ -89,14 +85,12 @@ CSDLEditor.Loader.addComponent(function($) {
             // enable edit when in edit mode
             if (self.mode === self.EDIT_MODE) {
                 $el.addClass('csdl-list-active')
-                    .find('input').width(spanWidth).focus();
+                    .find('.csdl-list-item-input').width(spanWidth).focus();
 
             // delete when in delete mode
             } else if (self.mode === self.DELETE_MODE) {
-                $el.fadeOut(200, function() {
-                    $el.remove();
-                    self.updateCounter();
-                });
+                $el.remove();
+                self.updateCounter();
             }
 
             return false;
@@ -118,15 +112,13 @@ CSDLEditor.Loader.addComponent(function($) {
             var $li = $(this).closest('li');
 
             if (!$.string.trim(this.value).length) {
-                $li.fadeOut(200, function() {
-                    $li.remove();
-                    self.updateCounter();
-                });
+                $li.remove();
+                self.updateCounter();
                 return;
             }
 
-            $li.removeClass('csdl-list-active')
-                .find('span').html(this.value);
+            $li.removeClass('csdl-list-active').data('value', this.value)
+                .find('.csdl-list-item-label').text(this.value);
         });
 
         /**
@@ -212,7 +204,7 @@ CSDLEditor.Loader.addComponent(function($) {
             // when pressed ESCAPE then reset the search
             if (ev.which === KEYS.ESC) {
                 self.$searchInput.val('').blur();
-                self.$list.children().not('[data-add-item]').fadeIn(100);
+                self.$list.children().show();
                 return;
             }
 
@@ -220,10 +212,10 @@ CSDLEditor.Loader.addComponent(function($) {
                 regexPattern = new RegExp('^' + search, 'i');
 
             self.$list.children().not('[data-add-item]').quickEach(function() {
-                if (regexPattern.test(this.find('input')[0].value)) {
-                    this.fadeIn(100);
+                if (regexPattern.test(this.data('value'))) {
+                    this.show();
                 } else {
-                    this.fadeOut(100);
+                    this.hide();
                 }
             });
         });
@@ -231,7 +223,7 @@ CSDLEditor.Loader.addComponent(function($) {
         /**
          * Set list editing mode when clicked on one of the mode buttons.
          */
-        this.$modeBtns.click(function(ev) {
+        this.$modeBtns.click(function() {
             self.setMode($(this).data('listMode'));
             return false;
         });
@@ -531,6 +523,25 @@ CSDLEditor.Loader.addComponent(function($) {
         },
 
         /**
+         * Shows an error during CSV import.
+         * 
+         * @param  {String} error Error message.
+         */
+        showCSVImportError : function(error) {
+            this.clearCSVImportError();
+            this.$importView.find('[data-step-one]').append(this.editor.getTemplate('listEditor_import_error', {
+                error : error
+            }));
+        },
+
+        /**
+         * Clears any CSV import errors from view.
+         */
+        clearCSVImportError : function() {
+            this.$importView.find('[data-csv-error]').remove();
+        },
+
+        /**
          * Parses the given CSV string and either imports it straight away (if a simple data structure)
          * or calls configureDataImport().
          * 
@@ -544,23 +555,35 @@ CSDLEditor.Loader.addComponent(function($) {
 
             // single line of values?
             if (lines.length === 1) {
-                this.addItems($.csv.toArray(lines[0]), replace);
-                this.hideImportView();
+                try {
+                    this.addItems($.csv.toArray(lines[0]), replace);
+                    this.hideImportView();
+                } catch(e) {
+                    this.showCSVImportError(e.message);
+                }
                 return;
             }
 
             // read full data structure
             var data = [],
-                maxInRow = 1;
-            $.each(lines, function(i, line) {
-                var items = $.csv.toArray(line);
+                maxInRow = 1,
+                l = 0;
 
-                if (items.length > maxInRow) {
-                    maxInRow = items.length;
-                }
+            try {
+                $.each(lines, function(i, line) {
+                    l = i;
+                    var items = $.csv.toArray(line);
 
-                data.push(items);
-            });
+                    if (items.length > maxInRow) {
+                        maxInRow = items.length;
+                    }
+
+                    data.push(items);
+                });
+            } catch(e) {
+                this.showCSVImportError(e.message + ' on line ' + (l + 1) + '.');
+                return;
+            }
 
             // only one item per row, so treat all of them as a list
             if (maxInRow === 1) {

@@ -638,7 +638,7 @@ body > .csdl-popup .csdl-popup-content {
   right: 10px;
   z-index: 51;
 }
-.csdl-container .csdl-list input.csdl-search {
+.csdl-container .csdl-list .csdl-search {
   display: inline-block;
   height: 30px;
   width: 200px;
@@ -662,7 +662,7 @@ body > .csdl-popup .csdl-popup-content {
   -o-transition: all 0.14s ease-out;
   transition: all 0.14s ease-out;
 }
-.csdl-container .csdl-list input.csdl-search:focus {
+.csdl-container .csdl-list .csdl-search:focus {
   -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
@@ -701,51 +701,26 @@ body > .csdl-popup .csdl-popup-content {
 .csdl-container .csdl-list .csdl-list-container p {
   margin: 20px 10px;
 }
-.csdl-container .csdl-list .csdl-list-container ol {
+.csdl-container .csdl-list .csdl-list-elements {
   list-style: none;
   display: block;
   margin: 15px;
 }
-.csdl-container .csdl-list .csdl-list-container ol li {
-  display: inline-block;
+.csdl-container .csdl-list .csdl-list-item {
+  display: block;
   position: relative;
   margin: 6px 3px;
-  margin-right: 0;
   float: left;
-}
-.csdl-container .csdl-list .csdl-list-container ol li .csdl-list-item {
-  display: inline-block;
   background: #fbfbfb;
   border: 1px solid #d4d4d4;
   padding: 5px 11px;
-  margin: 0 3px;
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   -o-border-radius: 4px;
   border-radius: 4px;
   overflow: hidden;
-  position: relative;
 }
-.csdl-container .csdl-list .csdl-list-container ol li .csdl-list-item span {
-  display: inline-block;
-  max-width: 150px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.csdl-container .csdl-list .csdl-list-container ol li .csdl-list-item input {
-  display: none;
-}
-.csdl-container .csdl-list .csdl-list-container ol li .csdl-list-item .csdl-list-item-mode-bar {
-  display: none;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 3px;
-  background: transparent;
-}
-.csdl-container .csdl-list .csdl-list-container ol li .csdl-list-item:hover {
+.csdl-container .csdl-list .csdl-list-item:hover {
   background-color: #f5f5f5;
   background-image: -moz-linear-gradient(top, #ffffff, #e6e6e6);
   background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#e6e6e6));
@@ -762,7 +737,7 @@ body > .csdl-popup .csdl-popup-content {
   -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05), transparent 0 0 0;
   box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05), transparent 0 0 0;
 }
-.csdl-container .csdl-list .csdl-list-container ol li.csdl-list-active .csdl-list-item {
+.csdl-container .csdl-list .csdl-list-item.csdl-list-active {
   padding: 3px 5px;
   background-color: #f5f5f5;
   background-image: -moz-linear-gradient(top, #ffffff, #e6e6e6);
@@ -780,23 +755,47 @@ body > .csdl-popup .csdl-popup-content {
   -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05), transparent 0 0 0;
   box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05), transparent 0 0 0;
 }
-.csdl-container .csdl-list .csdl-list-container ol li.csdl-list-active .csdl-list-item span {
+.csdl-container .csdl-list .csdl-list-item.csdl-list-active .csdl-list-item-label {
   display: none;
 }
-.csdl-container .csdl-list .csdl-list-container ol li.csdl-list-active .csdl-list-item input {
+.csdl-container .csdl-list .csdl-list-item.csdl-list-active .csdl-list-item-input {
   display: inline-block;
   padding: 11px 5px;
   max-width: 200px;
 }
-.csdl-container .csdl-list .csdl-list-container ol li.csdl-list-add {
+.csdl-container .csdl-list .csdl-list-item-label {
   display: inline-block;
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.csdl-container .csdl-list .csdl-list-item-input {
+  display: none;
+}
+.csdl-container .csdl-list .csdl-list-item-mode-bar {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: transparent;
+}
+.csdl-container .csdl-list .csdl-list-add {
+  display: block;
+  float: left;
   margin: 6px;
   margin-right: 9px;
   padding-right: 15px;
   border-right: 1px solid #d4d4d4;
   width: 200px;
 }
-.csdl-container .csdl-list .csdl-list-container ol li.csdl-list-placeholder {
+.csdl-container .csdl-list .sortable-placeholder {
+  display: block;
+  position: relative;
+  margin: 6px 3px;
+  float: left;
   width: 100px;
   height: 32px;
   border: 1px dashed #d4d4d4;
@@ -805,7 +804,7 @@ body > .csdl-popup .csdl-popup-content {
   -o-border-radius: 3px;
   border-radius: 3px;
 }
-.csdl-container .csdl-list .csdl-list-container ol input {
+.csdl-container .csdl-list input {
   display: inline-block;
   margin: 0;
   line-height: 18px;
@@ -824,32 +823,32 @@ body > .csdl-popup .csdl-popup-content {
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0), transparent 0 0 0;
   cursor: pointer;
 }
-.csdl-container .csdl-list .csdl-list-container ol input.csdl-list-add-input {
+.csdl-container .csdl-list input.csdl-list-add-input {
   height: 32px;
   width: 100%;
 }
-.csdl-container .csdl-list .csdl-list-container ol input:focus {
+.csdl-container .csdl-list input:focus {
   -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), transparent 0 0 0;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), transparent 0 0 0;
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), transparent 0 0 0;
 }
-.csdl-container .csdl-list .csdl-list-container ol.csdl-mode-edit li .csdl-list-item {
+.csdl-container .csdl-list .csdl-mode-edit .csdl-list-item {
   cursor: text;
 }
-.csdl-container .csdl-list .csdl-list-container ol.csdl-mode-edit li .csdl-list-item .csdl-list-item-mode-bar {
+.csdl-container .csdl-list .csdl-mode-edit .csdl-list-item .csdl-list-item-mode-bar {
   display: none;
 }
-.csdl-container .csdl-list .csdl-list-container ol.csdl-mode-delete li .csdl-list-item {
+.csdl-container .csdl-list .csdl-mode-delete .csdl-list-item {
   cursor: pointer;
 }
-.csdl-container .csdl-list .csdl-list-container ol.csdl-mode-delete li .csdl-list-item .csdl-list-item-mode-bar {
+.csdl-container .csdl-list .csdl-mode-delete .csdl-list-item-mode-bar {
   display: block;
   background: red;
 }
-.csdl-container .csdl-list .csdl-list-container ol.csdl-mode-move li .csdl-list-item {
+.csdl-container .csdl-list .csdl-mode-move .csdl-list-item {
   cursor: move;
 }
-.csdl-container .csdl-list .csdl-list-container ol.csdl-mode-move li .csdl-list-item .csdl-list-item-mode-bar {
+.csdl-container .csdl-list .csdl-mode-move .csdl-list-item-mode-bar {
   display: block;
   background: #388cb8;
 }
@@ -933,6 +932,10 @@ body > .csdl-popup .csdl-popup-content {
   -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+}
+.csdl-container .csdl-list .csdl-import-view .csdl-import-error {
+  color: red;
+  text-align: center;
 }
 .csdl-container .csdl-list .csdl-import-view .csdl-table-container {
   max-width: 460px;
