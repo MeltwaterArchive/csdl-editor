@@ -68,7 +68,7 @@ CSDLEditor.Loader.addComponent(function($) {
                 return;
             }
 
-            self.addItem(val);
+            self.addItem(val, self.$list.find('.csdl-list-add'));
 
             $el.val('');
         });
