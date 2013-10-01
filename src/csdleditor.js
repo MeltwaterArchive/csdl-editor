@@ -89,6 +89,9 @@ CSDLEditor.Loader.addComponent(function($) {
             mapsMarker : null,
             zeroClipboard : null,
 
+            foldOnLoad : false,
+            foldableLength : 20,
+
             // hooks/event handles
             save : function(code) {
                 noop(code);
@@ -248,13 +251,17 @@ CSDLEditor.Loader.addComponent(function($) {
                             return false;
                         }
                     },
+                    foldOnLoad : this.options.foldOnLoad,
+                    foldableLength : this.options.foldableLength,
                     autoCloseBrackets : true,
                     matchBrackets : true,
                     onKeyEvent: function(cm, ev) {
                         if (ev.type === 'keyup') {
                             self.showHint();
                         }
-                    }
+                    },
+                    gutter: true,
+                    gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
                 });
 
             this.originalHeight = this.$container.find('.CodeMirror').height();

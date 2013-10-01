@@ -20,6 +20,7 @@ bundy.js([
     "src/lib/jquery.sortable.js",
     "src/lib/jquery.zclip.js",
     "src/lib/mousetrap.js",
+    "src/csdleditor.codemirror.addon.fold.js",
     "src/csdleditor.codemirror.mode.csdl.js",
     "src/csdleditor.codemirror.hint.csdl.js",
     "src/csdleditor.googlemaps.js",
