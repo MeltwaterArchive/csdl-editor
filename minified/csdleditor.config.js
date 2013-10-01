@@ -51,7 +51,9 @@ var CSDLEditorConfig = CSDLEditorConfig || {
         'pcre',
         'contains_phrase',
         'all',
-        'contains_all'
+        'contains_all',
+        'wild',
+        'wildcard'
     ],
 
     logical : [
