@@ -261,7 +261,7 @@ CSDLEditor.Loader.addComponent(function($) {
                         }
                     },
                     gutter: true,
-                    gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
+                    gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
                 });
 
             this.originalHeight = this.$container.find('.CodeMirror').height();
