@@ -62,9 +62,7 @@ CSDLEditor.Loader.addComponent(function($) {
             return;
         }
 
-        var sizer = cm.display.sizer,
-            sizerMinWidth = sizer.style.minWidth,
-            foldMarkElement = $('<span class="csdl-folded-string">' + token.string.substr(0, cm.getOption('foldedLength')) + '..."</span>')[0];
+        var foldMarkElement = $('<span class="csdl-folded-string">' + token.string.substr(0, cm.getOption('foldedLength')) + '..."</span>')[0];
 
         foldMark = cm.markText(CodeMirror.Pos(l, token.start), CodeMirror.Pos(l, token.end), {
             className : 'csdl-folded-string',
@@ -72,8 +70,7 @@ CSDLEditor.Loader.addComponent(function($) {
             replacedWith : foldMarkElement
         });
 
-        // need to restore CodeMirror's sizer minWidth to what it was before folding to prevent horizontal scrolling issues
-        sizer.style.minWidth = sizerMinWidth;
+        cm.refresh();
 
         $(foldMarkElement).on('click', function() {
             var pos = foldMark.find();
@@ -105,6 +102,7 @@ CSDLEditor.Loader.addComponent(function($) {
         }
 
         foldMark.clear();
+        cm.refresh();
     },
 
     /**
