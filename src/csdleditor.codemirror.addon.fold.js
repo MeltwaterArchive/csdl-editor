@@ -62,13 +62,18 @@ CSDLEditor.Loader.addComponent(function($) {
             return;
         }
 
-        var foldMarkElement = $('<span class="csdl-folded-string">' + token.string.substr(0, cm.getOption('foldedLength')) + '..."</span>')[0];
+        var sizer = cm.display.sizer,
+            sizerMinWidth = sizer.style.minWidth,
+            foldMarkElement = $('<span class="csdl-folded-string">' + token.string.substr(0, cm.getOption('foldedLength')) + '..."</span>')[0];
 
         foldMark = cm.markText(CodeMirror.Pos(l, token.start), CodeMirror.Pos(l, token.end), {
             className : 'csdl-folded-string',
             atomic : true,
             replacedWith : foldMarkElement
         });
+
+        // need to restore CodeMirror's sizer minWidth to what it was before folding to prevent horizontal scrolling issues
+        sizer.style.minWidth = sizerMinWidth;
 
         $(foldMarkElement).on('click', function() {
             var pos = foldMark.find();
@@ -226,17 +231,23 @@ CSDLEditor.Loader.addComponent(function($) {
     CodeMirror.defineInitHook(function(cm) {
         // check each line if it's foldable to add appropriate gutter markers
         var foldOnLoad = cm.getOption('foldOnLoad'),
-            l = 0;
+            l = 0,
+            foldDelay = function(cm, l) {
+                setTimeout(function() {
+                    var tokens = getTokensInLine(cm, l, 'string');
+                    for(var i = 0; i < tokens.length; i++) {
+                        foldToken(cm, l, tokens[i]);
+                        setMarker(cm, l, 'unfold');
+                    }
+                }, 50);
+            };
 
         cm.eachLine(function() {
             var foldable = isFoldableLine(cm, l);
 
             if (foldOnLoad && foldable) {
-                var tokens = getTokensInLine(cm, l, 'string');
-                for(var i = 0; i < tokens.length; i++) {
-                    foldToken(cm, l, tokens[i]);
-                    setMarker(cm, l, 'unfold');
-                }
+                // delay folding to next tick so that CodeMirror can properly calculate its full line width
+                foldDelay(cm, l);
             }
 
             l++;
