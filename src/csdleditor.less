@@ -460,6 +460,13 @@ body > .csdl-popup {
         -moz-box-sizing: content-box; -webkit-box-sizing: content-box; box-sizing: content-box;
     }
 
+    .CodeMirror-code {
+        pre {
+            display: inline-block;
+            line-height: 1.2;
+        }
+    }
+
     .CodeMirror-gutters {
         width: 46px;
     }
@@ -477,6 +484,7 @@ body > .csdl-popup {
         border: 1px solid @dborder;
         .border-radius(2px);
         color: darken(@green, 5%);
+        background: white;
         -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
     }
 
@@ -1038,6 +1046,7 @@ body > .csdl-popup {
         .csdl-folded-string {
             border-color: @dborder;
             color: darken(@green, 5%);
+            background: white;
         }
 
         .cm-operator {
