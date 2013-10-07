@@ -99,7 +99,8 @@ CSDLEditor.Loader.addComponent(function($) {
             autosave : function(code) {
                 noop(code);
             },
-            verify : false
+            verify : false,
+            autofocus: false
         }, opt);
 
         /** @type {Object} Config of CSDLEditor, that can be altered via options. */
@@ -261,7 +262,8 @@ CSDLEditor.Loader.addComponent(function($) {
                         }
                     },
                     gutter: true,
-                    gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
+                    gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
+                    autofocus: this.options.autofocus
                 });
 
             this.originalHeight = this.$container.find('.CodeMirror').height();
