@@ -19,7 +19,7 @@ CSDLEditor.Loader.addComponent(function($) {
     // Author: Joseph Huckaby
     // 
     // CSDL Editor Private Version (so it doesn't clash with any existing on embedding page)
-    var CSDLZeroClipboard = {
+    var ZeroClipboard = {
 
         version: "1.0.7",
         clients: {},
@@ -105,18 +105,18 @@ CSDLEditor.Loader.addComponent(function($) {
             this.handlers = {};
 
             // unique ID
-            this.id = CSDLZeroClipboard.nextId++;
-            this.movieId = 'CSDLZeroClipboardMovie_' + this.id;
+            this.id = ZeroClipboard.nextId++;
+            this.movieId = 'ZeroClipboardMovie_' + this.id;
 
             // register client with singleton to receive flash events
-            CSDLZeroClipboard.register(this.id, this);
+            ZeroClipboard.register(this.id, this);
 
             // create movie
             if (elem) this.glue(elem);
         }
     };
 
-    CSDLZeroClipboard.Client.prototype = {
+    ZeroClipboard.Client.prototype = {
 
         id: 0,
         // unique ID for us
@@ -135,7 +135,7 @@ CSDLEditor.Loader.addComponent(function($) {
         glue: function (elem, appendElem, stylesToAdd) {
             // glue to DOM element
             // elem can be ID or actual DOM element object
-            this.domElement = CSDLZeroClipboard.$(elem);
+            this.domElement = ZeroClipboard.$(elem);
 
             // float just above object, or zIndex 99 if dom element isn't set
             var zIndex = 99;
@@ -144,13 +144,13 @@ CSDLEditor.Loader.addComponent(function($) {
             }
 
             if (typeof(appendElem) == 'string') {
-                appendElem = CSDLZeroClipboard.$(appendElem);
+                appendElem = ZeroClipboard.$(appendElem);
             } else if (typeof(appendElem) == 'undefined') {
                 appendElem = document.getElementsByTagName('body')[0];
             }
 
             // find X/Y position of domElement
-            var box = CSDLZeroClipboard.getDOMObjectPosition(this.domElement, appendElem);
+            var box = ZeroClipboard.getDOMObjectPosition(this.domElement, appendElem);
 
             // create floating DIV above element
             this.div = document.createElement('div');
@@ -185,10 +185,10 @@ CSDLEditor.Loader.addComponent(function($) {
             if (navigator.userAgent.match(/MSIE/)) {
                 // IE gets an OBJECT tag
                 var protocol = location.href.match(/^https/i) ? 'https://' : 'http://';
-                html += '<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="' + protocol + 'download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,0,0" width="' + width + '" height="' + height + '" id="' + this.movieId + '" align="middle"><param name="allowScriptAccess" value="always" /><param name="allowFullScreen" value="false" /><param name="movie" value="' + CSDLZeroClipboard.moviePath + '" /><param name="loop" value="false" /><param name="menu" value="false" /><param name="quality" value="best" /><param name="bgcolor" value="#ffffff" /><param name="flashvars" value="' + flashvars + '"/><param name="wmode" value="transparent"/></object>';
+                html += '<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="' + protocol + 'download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,0,0" width="' + width + '" height="' + height + '" id="' + this.movieId + '" align="middle"><param name="allowScriptAccess" value="always" /><param name="allowFullScreen" value="false" /><param name="movie" value="' + ZeroClipboard.moviePath + '" /><param name="loop" value="false" /><param name="menu" value="false" /><param name="quality" value="best" /><param name="bgcolor" value="#ffffff" /><param name="flashvars" value="' + flashvars + '"/><param name="wmode" value="transparent"/></object>';
             } else {
                 // all other browsers get an EMBED tag
-                html += '<embed id="' + this.movieId + '" src="' + CSDLZeroClipboard.moviePath + '" loop="false" menu="false" quality="best" bgcolor="#ffffff" width="' + width + '" height="' + height + '" name="' + this.movieId + '" align="middle" allowScriptAccess="always" allowFullScreen="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" flashvars="' + flashvars + '" wmode="transparent" />';
+                html += '<embed id="' + this.movieId + '" src="' + ZeroClipboard.moviePath + '" loop="false" menu="false" quality="best" bgcolor="#ffffff" width="' + width + '" height="' + height + '" name="' + this.movieId + '" align="middle" allowScriptAccess="always" allowFullScreen="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" flashvars="' + flashvars + '" wmode="transparent" />';
             }
             return html;
         },
@@ -226,12 +226,12 @@ CSDLEditor.Loader.addComponent(function($) {
             // reposition our floating div, optionally to new container
             // warning: container CANNOT change size, only position
             if (elem) {
-                this.domElement = CSDLZeroClipboard.$(elem);
+                this.domElement = ZeroClipboard.$(elem);
                 if (!this.domElement) this.hide();
             }
 
             if (this.domElement && this.div) {
-                var box = CSDLZeroClipboard.getDOMObjectPosition(this.domElement);
+                var box = ZeroClipboard.getDOMObjectPosition(this.domElement);
                 var style = this.div.style;
                 style.left = '' + box.left + 'px';
                 style.top = '' + box.top + 'px';
@@ -363,6 +363,10 @@ CSDLEditor.Loader.addComponent(function($) {
         }
     };
 
+    if (window.ZeroClipboard === undefined) {
+        window.ZeroClipboard = ZeroClipboard;
+    }
+
 
     $.fn.zclip = function (params) {
 
@@ -387,8 +391,8 @@ CSDLEditor.Loader.addComponent(function($) {
 
                 if (o.is(':visible') && (typeof settings.copy == 'string' || $.isFunction(settings.copy))) {
 
-                    CSDLZeroClipboard.setMoviePath(settings.path);
-                    var clip = new CSDLZeroClipboard.Client();
+                    ZeroClipboard.setMoviePath(settings.path);
+                    var clip = new ZeroClipboard.Client();
                     
                     if($.isFunction(settings.copy)){
                         o.bind('zClip_copy',settings.copy);
