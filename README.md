@@ -46,7 +46,8 @@ of an object literal.
 
         // hooks/event handles
         save : function(code) {},       // event triggered on manual user save
-        autosave : function(code) {}    // event triggered on auto save 
+        autosave : function(code) {},    // event triggered on auto save 
+	autofocus: false		// autofocus on initialization; defaults to false
     };
 
 # Save/autosave
