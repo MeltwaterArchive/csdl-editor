@@ -14,137 +14,12 @@
 
 CSDLEditor.Loader.addComponent(function($) {
 
-    $.fn.zclip = function (params) {
-
-        if (typeof params == "object" && !params.length) {
-
-            var settings = $.extend({
-
-                path: 'ZeroClipboard.swf',
-                copy: null,
-                beforeCopy: null,
-                afterCopy: null,
-                clickAfter: true,
-                setHandCursor: true,
-                setCSSEffects: true
-
-            }, params);
-            
-
-            return this.each(function () {
-
-                var o = $(this);
-
-                if (o.is(':visible') && (typeof settings.copy == 'string' || $.isFunction(settings.copy))) {
-
-                    ZeroClipboard.setMoviePath(settings.path);
-                    var clip = new ZeroClipboard.Client();
-                    
-                    if($.isFunction(settings.copy)){
-                        o.bind('zClip_copy',settings.copy);
-                    }
-                    if($.isFunction(settings.beforeCopy)){
-                        o.bind('zClip_beforeCopy',settings.beforeCopy);
-                    }
-                    if($.isFunction(settings.afterCopy)){
-                        o.bind('zClip_afterCopy',settings.afterCopy);
-                    }                    
-
-                    clip.setHandCursor(settings.setHandCursor);
-                    clip.setCSSEffects(settings.setCSSEffects);
-                    clip.addEventListener('mouseOver', function (client) {
-                        o.trigger('mouseenter');
-                    });
-                    clip.addEventListener('mouseOut', function (client) {
-                        o.trigger('mouseleave');
-                    });
-                    clip.addEventListener('mouseDown', function (client) {
-
-                        o.trigger('mousedown');
-                        
-            if(!$.isFunction(settings.copy)){
-               clip.setText(settings.copy);
-            } else {
-               clip.setText(o.triggerHandler('zClip_copy'));
-            }                        
-                        
-                        if ($.isFunction(settings.beforeCopy)) {
-                            console.log('before copy');
-                            o.trigger('zClip_beforeCopy');                            
-                        }
-
-                    });
-
-                    clip.addEventListener('complete', function (client, text) {
-
-                        if ($.isFunction(settings.afterCopy)) {
-                            
-                            o.trigger('zClip_afterCopy');
-
-                        } else {
-                            if (text.length > 500) {
-                                text = text.substr(0, 500) + "...\n\n(" + (text.length - 500) + " characters not shown)";
-                            }
-                            
-                o.removeClass('hover');
-                            alert("Copied text to clipboard:\n\n " + text);
-                        }
-
-                        if (settings.clickAfter) {
-                            o.trigger('click');
-                        }
-
-                    });
-
-                    
-                    clip.glue(o[0], o.parent()[0]);
-                    
-            $(window).bind('load resize',function(){clip.reposition();});
-                    
-
-                }
-
-            });
-
-        } else if (typeof params == "string") {
-
-            return this.each(function () {
-
-                var o = $(this);
-
-                params = params.toLowerCase();
-                var zclipId = o.data('zclipId');
-                var clipElm = $('#' + zclipId + '.zclip');
-
-                if (params == "remove") {
-
-                    clipElm.remove();
-                    o.removeClass('active hover');
-
-                } else if (params == "hide") {
-
-                    clipElm.hide();
-                    o.removeClass('active hover');
-
-                } else if (params == "show") {
-
-                    clipElm.show();
-
-                }
-
-            });
-
-        }
-
-    }
-
-
-
-// ZeroClipboard
-// Simple Set Clipboard System
-// Author: Joseph Huckaby
-if (window.ZeroClipboard === undefined) {
-    window.ZeroClipboard = {
+    // ZeroClipboard
+    // Simple Set Clipboard System
+    // Author: Joseph Huckaby
+    // 
+    // CSDL Editor Private Version (so it doesn't clash with any existing on embedding page)
+    var CSDLZeroClipboard = {
 
         version: "1.0.7",
         clients: {},
@@ -230,18 +105,18 @@ if (window.ZeroClipboard === undefined) {
             this.handlers = {};
 
             // unique ID
-            this.id = ZeroClipboard.nextId++;
-            this.movieId = 'ZeroClipboardMovie_' + this.id;
+            this.id = CSDLZeroClipboard.nextId++;
+            this.movieId = 'CSDLZeroClipboardMovie_' + this.id;
 
             // register client with singleton to receive flash events
-            ZeroClipboard.register(this.id, this);
+            CSDLZeroClipboard.register(this.id, this);
 
             // create movie
             if (elem) this.glue(elem);
         }
     };
 
-    window.ZeroClipboard.Client.prototype = {
+    CSDLZeroClipboard.Client.prototype = {
 
         id: 0,
         // unique ID for us
@@ -260,7 +135,7 @@ if (window.ZeroClipboard === undefined) {
         glue: function (elem, appendElem, stylesToAdd) {
             // glue to DOM element
             // elem can be ID or actual DOM element object
-            this.domElement = ZeroClipboard.$(elem);
+            this.domElement = CSDLZeroClipboard.$(elem);
 
             // float just above object, or zIndex 99 if dom element isn't set
             var zIndex = 99;
@@ -269,13 +144,13 @@ if (window.ZeroClipboard === undefined) {
             }
 
             if (typeof(appendElem) == 'string') {
-                appendElem = ZeroClipboard.$(appendElem);
+                appendElem = CSDLZeroClipboard.$(appendElem);
             } else if (typeof(appendElem) == 'undefined') {
                 appendElem = document.getElementsByTagName('body')[0];
             }
 
             // find X/Y position of domElement
-            var box = ZeroClipboard.getDOMObjectPosition(this.domElement, appendElem);
+            var box = CSDLZeroClipboard.getDOMObjectPosition(this.domElement, appendElem);
 
             // create floating DIV above element
             this.div = document.createElement('div');
@@ -310,10 +185,10 @@ if (window.ZeroClipboard === undefined) {
             if (navigator.userAgent.match(/MSIE/)) {
                 // IE gets an OBJECT tag
                 var protocol = location.href.match(/^https/i) ? 'https://' : 'http://';
-                html += '<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="' + protocol + 'download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,0,0" width="' + width + '" height="' + height + '" id="' + this.movieId + '" align="middle"><param name="allowScriptAccess" value="always" /><param name="allowFullScreen" value="false" /><param name="movie" value="' + ZeroClipboard.moviePath + '" /><param name="loop" value="false" /><param name="menu" value="false" /><param name="quality" value="best" /><param name="bgcolor" value="#ffffff" /><param name="flashvars" value="' + flashvars + '"/><param name="wmode" value="transparent"/></object>';
+                html += '<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="' + protocol + 'download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,0,0" width="' + width + '" height="' + height + '" id="' + this.movieId + '" align="middle"><param name="allowScriptAccess" value="always" /><param name="allowFullScreen" value="false" /><param name="movie" value="' + CSDLZeroClipboard.moviePath + '" /><param name="loop" value="false" /><param name="menu" value="false" /><param name="quality" value="best" /><param name="bgcolor" value="#ffffff" /><param name="flashvars" value="' + flashvars + '"/><param name="wmode" value="transparent"/></object>';
             } else {
                 // all other browsers get an EMBED tag
-                html += '<embed id="' + this.movieId + '" src="' + ZeroClipboard.moviePath + '" loop="false" menu="false" quality="best" bgcolor="#ffffff" width="' + width + '" height="' + height + '" name="' + this.movieId + '" align="middle" allowScriptAccess="always" allowFullScreen="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" flashvars="' + flashvars + '" wmode="transparent" />';
+                html += '<embed id="' + this.movieId + '" src="' + CSDLZeroClipboard.moviePath + '" loop="false" menu="false" quality="best" bgcolor="#ffffff" width="' + width + '" height="' + height + '" name="' + this.movieId + '" align="middle" allowScriptAccess="always" allowFullScreen="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" flashvars="' + flashvars + '" wmode="transparent" />';
             }
             return html;
         },
@@ -351,12 +226,12 @@ if (window.ZeroClipboard === undefined) {
             // reposition our floating div, optionally to new container
             // warning: container CANNOT change size, only position
             if (elem) {
-                this.domElement = ZeroClipboard.$(elem);
+                this.domElement = CSDLZeroClipboard.$(elem);
                 if (!this.domElement) this.hide();
             }
 
             if (this.domElement && this.div) {
-                var box = ZeroClipboard.getDOMObjectPosition(this.domElement);
+                var box = CSDLZeroClipboard.getDOMObjectPosition(this.domElement);
                 var style = this.div.style;
                 style.left = '' + box.left + 'px';
                 style.top = '' + box.top + 'px';
@@ -487,7 +362,131 @@ if (window.ZeroClipboard === undefined) {
             } // user defined handler for event
         }
     };
-}
+
+
+    $.fn.zclip = function (params) {
+
+        if (typeof params == "object" && !params.length) {
+
+            var settings = $.extend({
+
+                path: 'ZeroClipboard.swf',
+                copy: null,
+                beforeCopy: null,
+                afterCopy: null,
+                clickAfter: true,
+                setHandCursor: true,
+                setCSSEffects: true
+
+            }, params);
+            
+
+            return this.each(function () {
+
+                var o = $(this);
+
+                if (o.is(':visible') && (typeof settings.copy == 'string' || $.isFunction(settings.copy))) {
+
+                    CSDLZeroClipboard.setMoviePath(settings.path);
+                    var clip = new CSDLZeroClipboard.Client();
+                    
+                    if($.isFunction(settings.copy)){
+                        o.bind('zClip_copy',settings.copy);
+                    }
+                    if($.isFunction(settings.beforeCopy)){
+                        o.bind('zClip_beforeCopy',settings.beforeCopy);
+                    }
+                    if($.isFunction(settings.afterCopy)){
+                        o.bind('zClip_afterCopy',settings.afterCopy);
+                    }                    
+
+                    clip.setHandCursor(settings.setHandCursor);
+                    clip.setCSSEffects(settings.setCSSEffects);
+                    clip.addEventListener('mouseOver', function (client) {
+                        o.trigger('mouseenter');
+                    });
+                    clip.addEventListener('mouseOut', function (client) {
+                        o.trigger('mouseleave');
+                    });
+                    clip.addEventListener('mouseDown', function (client) {
+
+                        o.trigger('mousedown');
+                        
+            if(!$.isFunction(settings.copy)){
+               clip.setText(settings.copy);
+            } else {
+               clip.setText(o.triggerHandler('zClip_copy'));
+            }                        
+                        
+                        if ($.isFunction(settings.beforeCopy)) {
+                            console.log('before copy');
+                            o.trigger('zClip_beforeCopy');                            
+                        }
+
+                    });
+
+                    clip.addEventListener('complete', function (client, text) {
+
+                        if ($.isFunction(settings.afterCopy)) {
+                            
+                            o.trigger('zClip_afterCopy');
+
+                        } else {
+                            if (text.length > 500) {
+                                text = text.substr(0, 500) + "...\n\n(" + (text.length - 500) + " characters not shown)";
+                            }
+                            
+                o.removeClass('hover');
+                            alert("Copied text to clipboard:\n\n " + text);
+                        }
+
+                        if (settings.clickAfter) {
+                            o.trigger('click');
+                        }
+
+                    });
+
+                    
+                    clip.glue(o[0], o.parent()[0]);
+                    
+            $(window).bind('load resize',function(){clip.reposition();});
+                    
+
+                }
+
+            });
+
+        } else if (typeof params == "string") {
+
+            return this.each(function () {
+
+                var o = $(this);
+
+                params = params.toLowerCase();
+                var zclipId = o.data('zclipId');
+                var clipElm = $('#' + zclipId + '.zclip');
+
+                if (params == "remove") {
+
+                    clipElm.remove();
+                    o.removeClass('active hover');
+
+                } else if (params == "hide") {
+
+                    clipElm.hide();
+                    o.removeClass('active hover');
+
+                } else if (params == "show") {
+
+                    clipElm.show();
+
+                }
+
+            });
+
+        }
+
+    };
 
 });
 
