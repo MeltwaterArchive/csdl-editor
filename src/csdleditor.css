@@ -1060,7 +1060,7 @@ body > .csdl-popup .csdl-popup-content {
   font-style: italic;
 }
 .csdl-container.csdl-theme-light .CodeMirror .cm-keyword {
-  color: red;
+  color: black;
 }
 .csdl-container.csdl-theme-light .CodeMirror .cm-logical {
   color: red;
@@ -1119,7 +1119,7 @@ body > .csdl-popup .csdl-popup-content {
   font-style: italic;
 }
 .csdl-container.csdl-theme-dark .CodeMirror .cm-keyword {
-  color: #CDA869;
+  color: #F8F8F8;
 }
 .csdl-container.csdl-theme-dark .CodeMirror .cm-logical {
   color: #CDA869;
