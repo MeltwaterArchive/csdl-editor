@@ -111,7 +111,7 @@
         }
 
         // punctuation control can only occur after "contains", "contains_any" and "contains_near" operators
-        if (previous !== undefined && previous.type === 'operator' && (
+        if (previous !== undefined && previous !== null && previous.type === 'operator' && (
             previous.string.toLowerCase() === 'contains'
             || previous.string.toLowerCase() === 'contains_any'
             || previous.string.toLowerCase() === 'continas_near'

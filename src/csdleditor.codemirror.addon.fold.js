@@ -121,7 +121,7 @@ CSDLEditor.Loader.addComponent(function($) {
             ch = 1;
 
         if (!line) {
-            return;
+            return tokens;
         }
 
         while (ch < line.text.length) {
@@ -160,7 +160,11 @@ CSDLEditor.Loader.addComponent(function($) {
      */
     clearMarker = function(cm, l) {
         cm.setGutterMarker(l, gutterName, null);
-        cm.getLineHandle(l).foldable = false;
+
+        var line = cm.getLineHandle(l);
+        if (line) {
+            line.foldable = false;
+        }
     },
 
     /*****************************************
