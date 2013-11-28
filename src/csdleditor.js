@@ -89,6 +89,7 @@ CSDLEditor.Loader.addComponent(function($) {
             mapsMarker : null,
             zeroClipboard : null,
 
+            theme : 'light',
             foldOnLoad : false,
             foldableLength : 20,
 
@@ -98,6 +99,9 @@ CSDLEditor.Loader.addComponent(function($) {
             },
             autosave : function(code) {
                 noop(code);
+            },
+            themeChange : function(theme) {
+                noop(theme);
             },
             verify : false,
             autofocus: false
@@ -209,6 +213,9 @@ CSDLEditor.Loader.addComponent(function($) {
                 this.options.zeroClipboard = this.assetsUrl + 'swf/ZeroClipboard.swf';
             }
 
+            // set configured theme
+            this.setTheme(this.options.theme, true);
+
             // configure CSDL mode for "continue comments" addon
             CodeMirror.extendMode('csdl', {
                 blockCommentStart: "/*",
@@ -233,7 +240,7 @@ CSDLEditor.Loader.addComponent(function($) {
                 cm = this.codeMirror = CodeMirror(this.$container.find('[data-editor-container]')[0], {
                     value : this.options.value,
                     lineNumbers: true,
-                    highlightSelectionMatches : true,
+                    highlightSelectionMatches : false,
                     styleSelectedText : true,
                     styleActiveLine : true,
                     continueComments : true,
@@ -266,7 +273,11 @@ CSDLEditor.Loader.addComponent(function($) {
                     autofocus: this.options.autofocus
                 });
 
-            this.originalHeight = this.$container.find('.CodeMirror').height();
+            // set height to the full height of the container div
+            this.originalHeight = this.$el.height() - this.$topBar.outerHeight() - this.$bottomBar.outerHeight();
+            cm.setSize(null, this.originalHeight);
+
+            //this.originalHeight = this.$container.find('.CodeMirror').height();
 
             // show the verify button if verification handler specified
             if (typeof this.options.verify === 'function') {
@@ -452,9 +463,7 @@ CSDLEditor.Loader.addComponent(function($) {
              * Switch to light theme.
              */
             this.$lightBtn.click(function() {
-                self.$container.removeClass('csdl-theme-dark').addClass('csdl-theme-light');
-                self.$lightBtn.hide();
-                self.$darkBtn.show();
+                self.setTheme('light');
                 return false;
             });
 
@@ -462,9 +471,7 @@ CSDLEditor.Loader.addComponent(function($) {
              * Switch to dark theme.
              */
             this.$darkBtn.click(function() {
-                self.$container.removeClass('csdl-theme-light').addClass('csdl-theme-dark');
-                self.$darkBtn.hide();
-                self.$lightBtn.show();
+                self.setTheme('dark');
                 return false;
             });
 
@@ -1089,6 +1096,53 @@ CSDLEditor.Loader.addComponent(function($) {
         /* ##########################
          * SETTERS AND GETTERS
          * ########################## */
+        /**
+         * Applies a theme for the editor.
+         *
+         * At the moment only 'dark' and 'light' are supported.
+         *
+         * Returns (Boolean)false if failed to set the theme.
+         * 
+         * @param {String} theme  Theme name.
+         * @param {Boolean} silent [optional] If set to true then the 'themeChange' event will not be triggered.
+         *                         Default: false.
+         * @return Boolean
+         */
+        setTheme : function(theme, silent) {
+            silent = silent || false;
+
+            // for now only allow dark and light themes
+            if ($.inArray(theme, ['light', 'dark']) === -1) {
+                return false;
+            }
+
+            this.$container.removeClass('csdl-theme-dark csdl-theme-light')
+                .addClass('csdl-theme-' + theme);
+            this.$darkBtn.add(this.$lightBtn).hide();
+            if (theme === 'dark') {
+                this.$lightBtn.show();
+            } else {
+                this.$darkBtn.show();
+            }
+
+            this.options.theme = theme;
+
+            if (!silent) {
+                this.trigger('themeChange', [theme]);
+            }
+
+            return true;
+        },
+
+        /**
+         * Returns the current options object.
+         * 
+         * @return {Object}
+         */
+        getOptions : function() {
+            return this.options;
+        },
+
         /**
          * Returns the current code in the editor.
          * 

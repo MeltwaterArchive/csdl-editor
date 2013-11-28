@@ -95,6 +95,10 @@
   padding: 0 10px;
   position: relative;
 }
+.csdl-container .csdl-column.csdl-column-middle {
+  float: none;
+  margin: 0 auto;
+}
 .csdl-container .csdl-column.no-padding {
   padding: 0;
 }
@@ -584,6 +588,7 @@ body > .csdl-popup .csdl-popup-content {
   display: block;
   margin: 10px auto;
   width: 100%;
+  max-width: 750px;
   padding: 4px 8px;
   height: auto;
   font-size: 12px;
@@ -605,7 +610,7 @@ body > .csdl-popup .csdl-popup-content {
   min-width: 250px;
   max-width: 750px;
   width: 100%;
-  height: 250px;
+  height: 350px;
 }
 .csdl-container .csdl-geo .csdl-map .csdl-map-instructions {
   display: block;
