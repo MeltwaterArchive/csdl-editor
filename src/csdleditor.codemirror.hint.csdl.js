@@ -1,45 +1,10 @@
-/*global CodeMirror, CSDLEditorConfig, Math*/
+/*global CodeMirror, Math*/
 
-(function(CodeMirror, CSDLEditorConfig, Math, undefined) {
+(function(CodeMirror, Math, undefined) {
     "use strict";
 
     // define local vars
     var
-
-    /**
-     * List of all available targets.
-     * 
-     * @type {Array}
-     */
-    targets = CSDLEditorConfig.targets,
-
-    /**
-     * List of logical operators.
-     * 
-     * @type {Array}
-     */
-    logical = CSDLEditorConfig.logical,
-
-    /**
-     * List of all available operators.
-     * 
-     * @type {Array}
-     */
-    operators = CSDLEditorConfig.operators,
-
-    /**
-     * List of all available keywords.
-     * 
-     * @type {Array}
-     */
-    keywords = CSDLEditorConfig.keywords,
-
-    /**
-     * List of all available punctuation controls.
-     * 
-     * @type {Array}
-     */
-    punctuationControl = CSDLEditorConfig.punctuationControl,
 
     /**
      * String value of the current token that is being hinted.
@@ -65,7 +30,7 @@
      * @param  {Object|null} previous Token before the token for hinting so that the list can be context aware. 
      * @return {Array}
      */
-    getHintList = function(token, previous) {
+    getHintList = function(token, previous, config) {
         var candidates = [],
             hints = [],
             str = token.string.toLowerCase(),
@@ -77,7 +42,7 @@
             previous.type === 'target'
             || (previous.type === 'operator' && previous.string === 'cs')
         )) {
-            candidates = candidates.concat(operators);
+            candidates = candidates.concat(config.operators);
         }
 
         // logical operators can only occur after operators or values or brackets or keywords
@@ -88,7 +53,7 @@
             || previous.type === 'closebracket'
             || previous.type === 'keyword'
         )) {
-            candidates = candidates.concat(logical);
+            candidates = candidates.concat(config.logical);
         }
 
         // targets can only occur after opening brackets, keywords or logicals or nothing
@@ -98,7 +63,7 @@
             || previous.type === 'keyword'
             || previous.type === 'logical'
         ) {
-            candidates = candidates.concat(targets);
+            candidates = candidates.concat(config.targets);
         }
 
         // keywords can only occur after opening brackets, closing brackets or nothing
@@ -107,7 +72,7 @@
             || previous.type === 'openbracket'
             || previous.type === 'closebracket'
         ) {
-            candidates = candidates.concat(keywords);
+            candidates = candidates.concat(config.keywords);
         }
 
         // punctuation control can only occur after "contains", "contains_any" and "contains_near" operators
@@ -116,7 +81,7 @@
             || previous.string.toLowerCase() === 'contains_any'
             || previous.string.toLowerCase() === 'continas_near'
         )) {
-            candidates = candidates.concat(punctuationControl);
+            candidates = candidates.concat(config.punctuationControl);
         }
 
         // and now filter the candidates
@@ -136,9 +101,10 @@
      * Defines a CSDL hint functionality on CodeMirror.
      * 
      * @param  {CodeMirror} cm CodeMirror instance.
+     * @param  {Object} config Configuration object of the current editor.
      * @return {Object} Object conforming to hinting interface.
      */
-    CodeMirror.csdlHint = function(cm) {
+    CodeMirror.csdlHint = function(cm, config) {
         var cursor = cm.getCursor(),
             token = cm.getTokenAt(cursor),
             list = [];
@@ -152,7 +118,7 @@
         // only match words and outside of comments
         if (token.state.type !== 'comment' && token.state.type !== 'string' && /^[0-9a-zA-Z_<>=!\.\(\)\[\]]+$/.test(token.string)) {
             var previousToken = CodeMirror.getPreviousToken(cm, cursor, token);
-            list = getHintList(token, previousToken);
+            list = getHintList(token, previousToken, config);
             list.sort();
         }
 
@@ -168,4 +134,4 @@
         };
     };
 
-})(CodeMirror, CSDLEditorConfig, Math);
+})(CodeMirror, Math);

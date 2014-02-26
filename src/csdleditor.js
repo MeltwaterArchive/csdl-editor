@@ -89,6 +89,9 @@ CSDLEditor.Loader.addComponent(function($) {
             mapsMarker : null,
             zeroClipboard : null,
 
+            hideTargets : [],
+            showTargets : [],
+
             theme : 'light',
             foldOnLoad : false,
             foldableLength : 20,
@@ -110,7 +113,7 @@ CSDLEditor.Loader.addComponent(function($) {
         /** @type {Object} Config of CSDLEditor, that can be altered via options. */
         this.config = $.extend(true, CSDLEditorConfig, this.options.config);
 
-        // initialize the builder
+        // initialize the editor
         this.init();
     };
 
@@ -212,6 +215,8 @@ CSDLEditor.Loader.addComponent(function($) {
             if (!this.options.zeroClipboard) {
                 this.options.zeroClipboard = this.assetsUrl + 'swf/ZeroClipboard.swf';
             }
+
+            this.config.targets = this.filterTargets(this.config.targets);
 
             // set configured theme
             this.setTheme(this.options.theme, true);
@@ -769,7 +774,7 @@ CSDLEditor.Loader.addComponent(function($) {
             var self = this;
 
             CodeMirror.showHint(this.codeMirror, function(cm) {
-                var hint = CodeMirror.csdlHint(cm);
+                var hint = CodeMirror.csdlHint(cm, self.config);
 
                 // add slight delay so the current hint can be found (otherwise it doesn't work for BACKSPACE)
                 setTimeout(function() {
@@ -1091,6 +1096,97 @@ CSDLEditor.Loader.addComponent(function($) {
             $mapsMarkerUrl.remove();
 
             return assetsUrl.join('/') + '/';
+        },
+
+        /**
+         * Filters out the black/white listed targets from the config.
+         *
+         * @param {Array} targets Array of targets to be filtered.
+         * @return {Array}
+         */
+        filterTargets : function(targets) {
+            var self = this,
+                filteredTargets = [];
+
+            // push to a new array instead of removing from original to prevent
+            // indexes from getting messed up
+            $.each(targets, function(i, target) {
+                if (self.isTargetVisible(target)) {
+                    filteredTargets.push(target);
+                }
+            });
+
+            return filteredTargets;
+        },
+
+        /**
+         * Checks whether the given target is enabled (based on 'hideTargets' and 'showTargets' option).
+         *
+         * If there are any entries in 'showTargets' then a target to be visible needs to be in there.
+         * Otherwise if the target is in 'hideTargets' then it will be hidden.
+         * Otherwise it will be displayed.
+         * 
+         * @param  {String}  name Target name (can be a part of the name).
+         * @return {Boolean}
+         */
+        isTargetVisible : function(name) {
+            // for some reason sometimes can be undefined
+            if (!name) {
+                return false;
+            }
+
+            var showTargets = this.options.showTargets,
+                hideTargets = this.options.hideTargets;
+
+            // if no targets are black/white listed then dont bother with checking
+            if (!showTargets.length && !hideTargets.length) {
+                return true;
+            }
+
+            if (showTargets.length) {
+                // check for the specific target
+                if ($.inArray(name, showTargets) >= 0) {
+                    return true;
+                }
+
+                // specific target not found, but let's see if any of the parents of this target is marked as visible
+                var namePath = name.split('.');
+                while(namePath.length) {
+                    if ($.inArray(namePath.join('.'), showTargets) >= 0) {
+                        return true;
+                    }
+
+                    namePath.pop();
+                }
+
+                // if still no luck then search the other way around
+                // check if any children of this target are marked as visible
+                var nameAsParent = name + '.';
+                for (var i = 0; i < showTargets.length; i++) {
+                    if (showTargets[i].indexOf(nameAsParent) === 0) {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+            // check for specific target
+            if ($.inArray(name, hideTargets) >= 0) {
+                return false;
+            }
+
+            // specific target not found, but let's see if any of the parents of this target is marked as visible
+            var namePath = name.split('.');
+            while(namePath.length) {
+                if ($.inArray(namePath.join('.'), hideTargets) >= 0) {
+                    return false;
+                }
+
+                namePath.pop();
+            }
+
+            return true;
         },
 
         /* ##########################
