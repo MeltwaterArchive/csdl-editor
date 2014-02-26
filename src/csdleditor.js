@@ -264,7 +264,7 @@ CSDLEditor.Loader.addComponent(function($) {
                     autoCloseBrackets : true,
                     matchBrackets : true,
                     onKeyEvent: function(cm, ev) {
-                        if (ev.type === 'keyup') {
+                        if (ev.type === 'keyup' && (ev.which < 37 || ev.which > 40)) {
                             self.showHint();
                         }
                     },
