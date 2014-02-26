@@ -730,7 +730,7 @@ body > .csdl-popup {
     }
 
     .csdl-list-item {
-        display: block;
+        display: inline-block;
         position: relative;
         margin: 6px 3px;
         float: left;
@@ -739,6 +739,8 @@ body > .csdl-popup {
         padding: 5px 11px;
         .border-radius(4px);
         overflow: hidden;
+        max-width: 150px;
+        text-overflow: ellipsis;
 
         &:hover {
             .gradient(@btnBackground, @btnBackgroundHighlight);
@@ -771,11 +773,8 @@ body > .csdl-popup {
     }
 
     .csdl-list-item-label {
-        display: inline-block;
-        max-width: 150px;
-        overflow: hidden;
-        text-overflow: ellipsis;
         white-space: nowrap;
+        line-height: 1;
     }
 
     .csdl-list-item-input {

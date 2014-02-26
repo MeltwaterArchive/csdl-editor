@@ -758,7 +758,7 @@ body > .csdl-popup .csdl-popup-content {
   margin: 15px;
 }
 .csdl-container .csdl-list .csdl-list-item {
-  display: block;
+  display: inline-block;
   position: relative;
   margin: 6px 3px;
   float: left;
@@ -770,6 +770,8 @@ body > .csdl-popup .csdl-popup-content {
   -o-border-radius: 4px;
   border-radius: 4px;
   overflow: hidden;
+  max-width: 150px;
+  text-overflow: ellipsis;
 }
 .csdl-container .csdl-list .csdl-list-item:hover {
   background-color: #f5f5f5;
@@ -815,11 +817,8 @@ body > .csdl-popup .csdl-popup-content {
   max-width: 200px;
 }
 .csdl-container .csdl-list .csdl-list-item-label {
-  display: inline-block;
-  max-width: 150px;
-  overflow: hidden;
-  text-overflow: ellipsis;
   white-space: nowrap;
+  line-height: 1;
 }
 .csdl-container .csdl-list .csdl-list-item-input {
   display: none;
@@ -1041,11 +1040,8 @@ body > .csdl-popup .csdl-popup-content {
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - LIGHT THEME */
 .csdl-container.csdl-theme-light .CodeMirror {
   /* highlight text that matches selection */
-
   /* selected text */
-
   /* empty editor */
-
 }
 .csdl-container.csdl-theme-light .CodeMirror .cm-matchhighlight {
   border: 1px solid #ddd;
