@@ -53,7 +53,9 @@ var CSDLEditorConfig = CSDLEditorConfig || {
         'all',
         'contains_all',
         'wild',
-        'wildcard'
+        'wildcard',
+	'list_in',
+	'list_any'
     ],
 
     logical : [
