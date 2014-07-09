@@ -1244,7 +1244,10 @@ CSDLEditor.Loader.addComponent(function($) {
          * 
          * @return {String}
          */
-        value : function() {
+        value : function(code) {
+            if (code) {
+                this.codeMirror.setValue(code);
+            }
             return this.codeMirror.getValue();
         }
 
