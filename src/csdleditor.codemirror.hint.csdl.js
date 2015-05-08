@@ -45,6 +45,12 @@
             candidates = candidates.concat(config.operators);
         }
 
+        // inverse operators can only occur after logicals or nothing
+        if (previous === undefined || previous === null || !previous
+            || previous.type == 'logical') {
+            candidates = candidates.concat(config.inverse);
+        }
+
         // logical operators can only occur after operators or values or brackets or keywords
         if (previous && (
             previous.type === 'operator'
@@ -56,12 +62,13 @@
             candidates = candidates.concat(config.logical);
         }
 
-        // targets can only occur after opening brackets, keywords or logicals or nothing
+        // targets can only occur after opening brackets, keywords or inverse or logicals or nothing
         if (previous === undefined || previous === null || !previous
             || previous.type === null
             || previous.type === 'openbracket'
             || previous.type === 'keyword'
             || previous.type === 'logical'
+            || previous.type === 'inverse'
         ) {
             candidates = candidates.concat(config.targets);
         }

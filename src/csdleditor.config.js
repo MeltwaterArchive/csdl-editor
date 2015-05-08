@@ -63,8 +63,11 @@ var CSDLEditorConfig = CSDLEditorConfig || {
         'or'
     ],
 
+    inverse : [
+        'not'
+    ],
+
     keywords : [
-        'not',
         'stream',
         'tag',
         'tags',
