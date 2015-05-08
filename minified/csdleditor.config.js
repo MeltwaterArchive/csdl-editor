@@ -63,7 +63,7 @@ var CSDLEditorConfig = CSDLEditorConfig || {
         'or'
     ],
 
-    inverse : [
+    unary : [
         'not'
     ],
 

@@ -28,11 +28,11 @@
     logicals = {},
 
     /**
-     * Dictionary of all available CSDL inverse operators.
+     * Dictionary of all available CSDL unary operators.
      *
      * @type {Object}
      */
-    inverse = {},
+    unarys = {},
 
     /**
      * Dictionary of all available CSDL keywords.
@@ -128,9 +128,9 @@
             return 'logical';
         }
 
-        // is it a inverse
-        if (inverses.hasOwnProperty(word)) {
-            return 'inverse';
+        // is it a unary
+        if (unarys.hasOwnProperty(word)) {
+            return 'unary';
         }
 
         // is it a keyword?
@@ -257,7 +257,7 @@
         targets = arrayToDictionary(parserConfig.targets);
         operators = arrayToDictionary(parserConfig.operators);
         logicals = arrayToDictionary(parserConfig.logical);
-        inverses = arrayToDictionary(parserConfig.inverse);
+        unarys = arrayToDictionary(parserConfig.unary);
         keywords = arrayToDictionary(parserConfig.keywords);
         punctuationControl = arrayToDictionary(parserConfig.punctuationControl);
 

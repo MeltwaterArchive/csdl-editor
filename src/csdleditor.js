@@ -255,7 +255,7 @@ CSDLEditor.Loader.addComponent(function($) {
                         targets : this.config.targets,
                         operators : this.config.operators,
                         logical : this.config.logical,
-                        inverse : this.config.inverse,
+                        unary : this.config.unary,
                         keywords : this.config.keywords,
                         punctuationControl : this.config.punctuationControl
                     },
