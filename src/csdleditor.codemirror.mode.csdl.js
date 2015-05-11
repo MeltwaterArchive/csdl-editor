@@ -28,6 +28,13 @@
     logicals = {},
 
     /**
+     * Dictionary of all available CSDL unary operators.
+     *
+     * @type {Object}
+     */
+    unarys = {},
+
+    /**
      * Dictionary of all available CSDL keywords.
      * 
      * @type {Object}
@@ -119,6 +126,11 @@
         // is it a logical
         if (logicals.hasOwnProperty(word)) {
             return 'logical';
+        }
+
+        // is it a unary
+        if (unarys.hasOwnProperty(word)) {
+            return 'unary';
         }
 
         // is it a keyword?
@@ -245,6 +257,7 @@
         targets = arrayToDictionary(parserConfig.targets);
         operators = arrayToDictionary(parserConfig.operators);
         logicals = arrayToDictionary(parserConfig.logical);
+        unarys = arrayToDictionary(parserConfig.unary);
         keywords = arrayToDictionary(parserConfig.keywords);
         punctuationControl = arrayToDictionary(parserConfig.punctuationControl);
 
