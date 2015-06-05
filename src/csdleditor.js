@@ -1029,7 +1029,7 @@ CSDLEditor.Loader.addComponent(function($) {
                 var prevToken = CodeMirror.getPreviousToken(this.codeMirror, cursor, token);
 
                 if (prevToken && prevToken.type === 'operator' && $.inArray(prevToken.string, ['geo_polygon', 'geo_radius', 'geo_box']) >= 0) {
-                    var nextToken = CodeMirror.getNextToken(this.codeMirror, cursor, token);
+                    var nextToken = (token.type !== 'string') ? CodeMirror.getNextToken(this.codeMirror, cursor, token) : null;
 
                     if (token.type === 'string' || (! nextToken && nextToken !== 'string')) {
                         // mark that it is possible to use geo selection now
@@ -1114,7 +1114,7 @@ CSDLEditor.Loader.addComponent(function($) {
                 }
 
                 if (prevToken && prevToken.type === 'operator' && $.inArray(prevToken.string, ['contains_any', 'contains_phrase', 'any', 'in', 'url_in', 'all', 'contains_all']) >= 0) {
-                    var nextToken = CodeMirror.getNextToken(this.codeMirror, cursor, token);
+                    var nextToken = (token.type !== 'string') ? CodeMirror.getNextToken(this.codeMirror, cursor, token) : null;
 
                     if (token.type === 'string' || (! nextToken && nextToken !== 'string')) {
                         // mark that it is possible to use list editor now
