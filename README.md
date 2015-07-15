@@ -3,7 +3,16 @@ DataSift CSDL Editor
 
 DataSift CSDL Editor is a code editor for [CSDL](http://dev.datasift.com/csdl).
 
-# Installation
+# Quick start
+
+Several quick start options are available:
+
+- [Download the latest release](https://github.com/datasift/csdl-editor/releases).
+- Clone the repo: `git clone https://github.com/datasift/csdl-editor.git`.
+- Install with [Bower](http://bower.io): `bower install csdl-editor`.
+- Install with [npm](https://www.npmjs.com): `npm install csdl-editor`.
+
+# Usage/Setup
 
 Include the following files on your page:
 

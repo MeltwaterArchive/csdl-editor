@@ -39,54 +39,56 @@
 
         // operators can only occur after targets or "cs" operator
         if (previous && (
-            previous.type === 'target'
-            || (previous.type === 'operator' && previous.string === 'cs')
+            previous.type === 'target' ||
+            (previous.type === 'operator' && previous.string === 'cs')
         )) {
             candidates = candidates.concat(config.operators);
         }
 
         // unary operators can only occur after logicals or nothing
-        if (previous === undefined || previous === null || !previous
-            || previous.type == 'logical') {
+        if (previous === undefined ||
+            previous === null ||
+            !previous ||
+            previous.type == 'logical'
+        ) {
             candidates = candidates.concat(config.unary);
         }
 
         // logical operators can only occur after operators or values or brackets or keywords
-        if (previous && (
-            previous.type === 'operator'
-            || previous.type === 'string'
-            || previous.type === 'number'
-            || previous.type === 'closebracket'
-            || previous.type === 'keyword'
+        if (previous && (previous.type === 'operator' ||
+            previous.type === 'string' ||
+            previous.type === 'number' ||
+            previous.type === 'closebracket' ||
+            previous.type === 'keyword'
         )) {
             candidates = candidates.concat(config.logical);
         }
 
         // targets can only occur after opening brackets, keywords or unary or logicals or nothing
-        if (previous === undefined || previous === null || !previous
-            || previous.type === null
-            || previous.type === 'openbracket'
-            || previous.type === 'keyword'
-            || previous.type === 'logical'
-            || previous.type === 'unary'
+        if (previous === undefined || previous === null || !previous ||
+            previous.type === null ||
+            previous.type === 'openbracket' ||
+            previous.type === 'keyword' ||
+            previous.type === 'logical' ||
+            previous.type === 'unary'
         ) {
             candidates = candidates.concat(config.targets);
         }
 
         // keywords can only occur after opening brackets, closing brackets or nothing
-        if (previous === undefined || previous === null || !previous
-            || previous.type === null
-            || previous.type === 'openbracket'
-            || previous.type === 'closebracket'
+        if (previous === undefined || previous === null || !previous ||
+            previous.type === null ||
+            previous.type === 'openbracket' ||
+            previous.type === 'closebracket'
         ) {
             candidates = candidates.concat(config.keywords);
         }
 
         // punctuation control can only occur after "contains", "contains_any" and "contains_near" operators
         if (previous !== undefined && previous !== null && previous.type === 'operator' && (
-            previous.string.toLowerCase() === 'contains'
-            || previous.string.toLowerCase() === 'contains_any'
-            || previous.string.toLowerCase() === 'continas_near'
+            previous.string.toLowerCase() === 'contains' ||
+            previous.string.toLowerCase() === 'contains_any' ||
+            previous.string.toLowerCase() === 'continas_near'
         )) {
             candidates = candidates.concat(config.punctuationControl);
         }
