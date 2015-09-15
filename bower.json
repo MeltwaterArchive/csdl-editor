@@ -1,0 +1,19 @@
+{
+  "name": "csdl-editor",
+  "version": "1.0.0",
+  "homepage": "https://github.com/datasift/csdl-editor",
+  "description": "DataSift CSDL Editor is a code editor for CSDL.",
+  "keywords": [
+    "DataSift",
+    "CSDL",
+    "Editor"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

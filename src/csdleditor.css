@@ -1063,7 +1063,7 @@ body > .csdl-popup .csdl-popup-content {
 .csdl-container.csdl-theme-light .CodeMirror .cm-keyword {
   color: black;
 }
-.csdl-container.csdl-theme-light .CodeMirror .cm-logical {
+.csdl-container.csdl-theme-light .CodeMirror .cm-logical, .csdl-container.csdl-theme-light .CodeMirror .cm-unary {
   color: red;
 }
 .csdl-container.csdl-theme-light .CodeMirror .cm-target {
@@ -1122,7 +1122,7 @@ body > .csdl-popup .csdl-popup-content {
 .csdl-container.csdl-theme-dark .CodeMirror .cm-keyword {
   color: #F8F8F8;
 }
-.csdl-container.csdl-theme-dark .CodeMirror .cm-logical {
+.csdl-container.csdl-theme-dark .CodeMirror .cm-logical, .csdl-container.csdl-theme-dark .CodeMirror .cm-unary {
   color: #CDA869;
 }
 .csdl-container.csdl-theme-dark .CodeMirror .cm-target {
