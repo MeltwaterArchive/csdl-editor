@@ -62,6 +62,46 @@ CSDLEditor.Loader.addComponent(function($) {
     };
 
     /**
+     * Extend CodeMirror with a function that tries to find a next token going forward from the token given.
+     *
+     * @param  {CodeMirror} cm CodeMirror instance.
+     * @param  {CodeMirror.Pos} cursor Cursor position.
+     * @param  {Object} tokenFrom Object of token from which to start the search.
+     * @return {Object|null}
+     */
+    CodeMirror.getNextToken = function(cm, cursor, tokenFrom) {
+        var token = null,
+            line = cursor.line,
+            lineContent = cm.getLine(line),
+            lineCount = cm.lineCount(),
+            ch = tokenFrom.end;
+
+        // move the cursor forwards until it finds a token or reaches the end
+        while(true) {
+            // break if reached the end
+            if (line === lineCount - 1 && ch >= lineContent.length - 1) {
+                break;
+            }
+
+            // if ch reached end of line then move to line below
+            if (ch >= lineContent.length - 1) {
+                line = line + 1;
+                lineContent = cm.getLine(line);
+                ch = 0; // and set ch to the beginning of this line
+            } else {
+                ch = ch + 1;
+            }
+
+            token = cm.getTokenAt(CodeMirror.Pos(line, ch));
+            if (token.type !== null && token.type !== 'comment') { // ignore comment tokens as well
+                break;
+            }
+        }
+
+        return token;
+    };
+
+    /**
      * Constructor for the CSDLEditor.Editor.
      * 
      * @param {String|jQuery} el DOM element inside of which the editor should be embedded. Can be a jQuery selector or a DOM element or a jQuery DOM element. Must be present in DOM.
@@ -941,7 +981,7 @@ CSDLEditor.Loader.addComponent(function($) {
             var self = this,
                 selection = new CSDLEditor.GeoSelection[type](this, this.$geo);
 
-            if (this.currentGeoSelectionValueToken) {
+            if (this.currentGeoSelectionValueToken && this.currentGeoSelectionValueToken.type === 'string') {
                 var val = $.string.trim(this.currentGeoSelectionValueToken.string, '"');
                 if (val.length) {
                     selection.setValue(val);
@@ -956,6 +996,11 @@ CSDLEditor.Loader.addComponent(function($) {
 
             this.$geo.find('a[data-done]').click(function() {
                 var val = selection.getValue();
+
+                if (! self.currentGeoSelectionValueToken.type) {
+                    self.currentGeoSelectionValueToken.start += 1;
+                    self.currentGeoSelectionValueToken.end = self.currentGeoSelectionValueToken.start;
+                }
 
                 self.codeMirror.replaceRange('"' + val + '"', {
                     line : self.currentGeoSelectionValueLine,
@@ -980,18 +1025,22 @@ CSDLEditor.Loader.addComponent(function($) {
          * @return {Boolean}
          */
         toggleGeoSelectionForToken : function(token, cursor) {
-            if (token.type === 'string') {
+            if (token.type === 'string' || ! token.type) {
                 var prevToken = CodeMirror.getPreviousToken(this.codeMirror, cursor, token);
 
-                if (prevToken.type === 'operator' && $.inArray(prevToken.string, ['geo_polygon', 'geo_radius', 'geo_box']) >= 0) {
-                    // mark that it is possible to use geo selection now
-                    this.currentGeoSelectionType = prevToken.string.substr(4);
-                    this.$geoBtn.removeClass('csdl-inactive');
+                if (prevToken && prevToken.type === 'operator' && $.inArray(prevToken.string, ['geo_polygon', 'geo_radius', 'geo_box']) >= 0) {
+                    var nextToken = (token.type !== 'string') ? CodeMirror.getNextToken(this.codeMirror, cursor, token) : null;
 
-                    this.currentGeoSelectionValueToken = token;
-                    this.currentGeoSelectionValueLine = cursor.line;
+                    if (token.type === 'string' || (nextToken && nextToken.type !== 'string') || ! nextToken) {
+                        // mark that it is possible to use geo selection now
+                        this.currentGeoSelectionType = prevToken.string.substr(4);
+                        this.$geoBtn.removeClass('csdl-inactive');
 
-                    return true;
+                        this.currentGeoSelectionValueToken = token;
+                        this.currentGeoSelectionValueLine = cursor.line;
+
+                        return true;
+                    }
                 }
             }
 
@@ -1012,7 +1061,7 @@ CSDLEditor.Loader.addComponent(function($) {
             var self = this,
                 listEditor = new CSDLEditor.ListEditor(this, this.$list);
 
-            if (this.currentListValueToken) {
+            if (this.currentListValueToken && this.currentListValueToken.type === 'string') {
                 var val = $.string.trim(this.currentListValueToken.string, '"');
                 if (val.length) {
                     listEditor.setValue(val);
@@ -1027,6 +1076,11 @@ CSDLEditor.Loader.addComponent(function($) {
 
             this.$list.find('a[data-done]').click(function() {
                 var val = listEditor.getValue();
+
+                if (! self.currentListValueToken.type) {
+                    self.currentListValueToken.start += 1;
+                    self.currentListValueToken.end = self.currentListValueToken.start;
+                }
 
                 self.codeMirror.replaceRange('"' + val + '"', {
                     line : self.currentListValueLine,
@@ -1051,21 +1105,25 @@ CSDLEditor.Loader.addComponent(function($) {
          * @return {Boolean}
          */
         toggleListEditorForToken : function(token, cursor) {
-            if (token.type === 'string') {
+            if (token.type === 'string' || ! token.type) {
                 var prevToken = CodeMirror.getPreviousToken(this.codeMirror, cursor, token);
 
                 // if punctuation token then skip it
-                if (prevToken.type === 'punctuation') {
+                if (prevToken && prevToken.type === 'punctuation') {
                     prevToken = CodeMirror.getPreviousToken(this.codeMirror, cursor, prevToken);
                 }
 
-                if (prevToken.type === 'operator' && $.inArray(prevToken.string, ['contains_any', 'contains_phrase', 'any', 'in', 'url_in', 'all', 'contains_all']) >= 0) {
-                    // mark that it is possible to use list editor now
-                    this.$listBtn.removeClass('csdl-inactive');
-                    this.currentListValueToken = token;
-                    this.currentListValueLine = cursor.line;
+                if (prevToken && prevToken.type === 'operator' && $.inArray(prevToken.string, ['contains_any', 'contains_phrase', 'any', 'in', 'url_in', 'all', 'contains_all']) >= 0) {
+                    var nextToken = (token.type !== 'string') ? CodeMirror.getNextToken(this.codeMirror, cursor, token) : null;
 
-                    return true;
+                    if (token.type === 'string' || (nextToken && nextToken.type !== 'string') || ! nextToken) {
+                        // mark that it is possible to use list editor now
+                        this.$listBtn.removeClass('csdl-inactive');
+                        this.currentListValueToken = token;
+                        this.currentListValueLine = cursor.line;
+
+                        return true;
+                    }
                 }
             }
 
