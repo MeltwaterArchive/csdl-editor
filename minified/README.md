@@ -22,7 +22,7 @@ Include the following files on your page:
 
 To use the Facebook PYLON config, replace the `csdleditor.config.js` line above with:
 
-    <script type="text/javascript" src="[path_to_editor]/csdleditor.config.faceook.pylon.js"></script>
+    <script type="text/javascript" src="[path_to_editor]/csdleditor.config.facebook.pylon.js"></script>
 
 Prepare a HTML element where the editor will be embedded:
 
