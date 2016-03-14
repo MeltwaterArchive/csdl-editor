@@ -20,6 +20,10 @@ Include the following files on your page:
     <script type="text/javascript" src="[path_to_editor]/csdleditor.config.js"></script>
     <script type="text/javascript" src="[path_to_editor]/csdleditor.min.js"></script>
 
+To use the Facebook PYLON config, replace the `csdleditor.config.js` line above with:
+
+    <script type="text/javascript" src="[path_to_editor]/csdleditor.config.faceook.pylon.js"></script>
+
 Prepare a HTML element where the editor will be embedded:
 
     <div id="csdleditor"></div>
@@ -55,8 +59,8 @@ of an object literal.
 
         // hooks/event handles
         save : function(code) {},       // event triggered on manual user save
-        autosave : function(code) {},    // event triggered on auto save 
-	autofocus: false		// autofocus on initialization; defaults to false
+        autosave : function(code) {},    // event triggered on auto save
+        autofocus: false		// autofocus on initialization; defaults to false
     };
 
 # Save/autosave
