@@ -1,6 +1,7 @@
 var bundy = require('bundy');
 
 bundy.copy("src/csdleditor.config.js", "minified/csdleditor.config.js");
+bundy.copy("src/csdleditor.config.facebook.pylon.js", "minified/csdleditor.config.facebook.pylon.js");
 
 bundy.js([
 	"src/csdleditor.loader.js",
