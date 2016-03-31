@@ -19,7 +19,8 @@ CSDLEditor.Loader.addComponent(function($) {
             'maximize',
             'minimize',
             'undo',
-            'redo'
+            'redo',
+            'refresh'
         ];
 
     /**
@@ -281,6 +282,9 @@ CSDLEditor.Loader.addComponent(function($) {
                 self.redo();
             };
 
+            CodeMirror.commands.refresh = function() {
+                self.refresh();
+            };
             var autosaveTimeout,
                 cm = this.codeMirror = CodeMirror(this.$container.find('[data-editor-container]')[0], {
                     value : this.options.value,
@@ -594,7 +598,12 @@ CSDLEditor.Loader.addComponent(function($) {
                 this.$redoBtn.addClass('csdl-inactive');
             }
         },
-
+        /**
+         * Refresh the editor.
+         */
+        refresh : function() {
+            this.codeMirror.refresh();
+        },
         /**
          * Display a CSDL error in the editor.
          * 
