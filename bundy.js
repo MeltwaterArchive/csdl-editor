@@ -46,10 +46,6 @@ bundy.copy([
     'src/images/maps-marker.png'
 ], 'minified/images/');
 
-bundy.copy([
-    'src/swf/ZeroClipboard.swf'
-], 'minified/swf/');
-
 bundy.copy('README.md', 'minified/README.md');
 
 // go!

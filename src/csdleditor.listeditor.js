@@ -34,7 +34,6 @@ CSDLEditor.Loader.addComponent(function($) {
         this.$list = this.$view.find('.csdl-list-elements');
 
         /* setup links to important elements */
-        this.$copyBtn = this.$view.find('a[data-copy]').attr('id', 'csdl-copy-to-clipboard-' + Math.floor(Math.random() * 10000));
         this.$importBtn = this.$view.find('a[data-import]');
         this.$modeBtns = this.$view.find('a[data-list-mode]');
         this.$searchInput = this.$view.find('input[name="search"]');
@@ -167,25 +166,6 @@ CSDLEditor.Loader.addComponent(function($) {
             return false;
         });
 
-        // helper function for copying to clipboard
-        var copyButtonTransitionTimeout;
-
-        /**
-         * Make the copy to clipboard button working.
-         */
-        this.$copyBtn.zclip({
-            path : this.editor.options.zeroClipboard,
-            copy : function() {
-                return self.getValue();
-            },
-            afterCopy : function() {
-                clearTimeout(copyButtonTransitionTimeout);
-                self.$copyBtn.find('span').html('Copied');
-                setTimeout(function() {
-                    self.$copyBtn.find('span').html('Copy to Clipboard');
-                }, 3000);
-            }
-        });
 
         /**
          * Shows or hides the import window.

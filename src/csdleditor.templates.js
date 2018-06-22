@@ -102,7 +102,6 @@ CSDLEditor.Loader.addComponent(function() {
                         '<a href="#" class="csdl-button csdl-delete" data-list-mode="delete"><i class="csdl-button-icon" /></a>',
                         '<a href="#" class="csdl-button csdl-button-with-icon csdl-import" data-import><i class="csdl-button-icon" />Import</a>',
                         '<a href="#" class="csdl-button csdl-button-with-icon csdl-sort-az" data-sort><i class="csdl-button-icon" />Sort A-Z</a>',
-                        '<a href="#" class="csdl-button csdl-button-with-icon csdl-copy" data-copy><i class="csdl-button-icon" /><span>Copy to Clipboard</span></a>',
                         '<input type="text" name="search" placeholder="Search..." class="csdl-search">',
                     '</div>',
                     '<div class="csdl-column two csdl-right">',
